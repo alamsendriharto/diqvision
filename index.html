@@ -153,4 +153,138 @@
           <img src="https://picsum.photos/seed/4/1100/400" alt="slide4"/>
         </div>
         <div class="dots" id="dots"></div>
-      <
+      </div>
+
+      <div class="grid cols-2">
+        <div class="card"><b>Kecakapan Digital</b><br><small>Penguasaan dasar TIK, pencarian informasi, pembuatan konten.</small></div>
+        <div class="card"><b>Keamanan Digital</b><br><small>Perlindungan data pribadi, keamanan akun, etika penggunaan.</small></div>
+        <div class="card"><b>Budaya Digital</b><br><small>Interaksi sehat di dunia maya, menghargai perbedaan.</small></div>
+        <div class="card"><b>Etika Digital</b><br><small>Tanggung jawab, anti-plagiarisme, sopan santun online.</small></div>
+      </div>
+
+      <!-- News Section -->
+      <div class="news">
+        <h2>📰 News</h2>
+        <div class="news-item"><b>Judul Berita 1</b><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+        <div class="news-item"><b>Judul Berita 2</b><br>Praesent tincidunt, sapien ut vehicula ullamcorper, lacus nulla.</div>
+        <div class="news-item"><b>Judul Berita 3</b><br>Sed vitae justo nec nunc fermentum dapibus non at eros.</div>
+      </div>
+    </section>
+
+    <!-- ABSEN -->
+    <section id="absen" class="card view" style="display:none">
+      <h2>📋 Absen Karya</h2>
+      <p>Form absensi kegiatan literasi digital.</p>
+    </section>
+
+    <!-- SUBMIT -->
+    <section id="submit" class="card view" style="display:none">
+      <h2>📤 Submit Karya</h2>
+      <p>Unggah atau tulis karya digitalmu di sini.</p>
+    </section>
+
+    <!-- PROFIL -->
+    <section id="profil" class="card view" style="display:none">
+      <h2>👤 Profil</h2>
+      <p>Lihat profil pembuat karya.</p>
+    </section>
+
+    <!-- LMS -->
+    <section id="lms" class="card view" style="display:none">
+      <h2>🎓 LMS Literasi Digital</h2>
+      <p>Modul pembelajaran interaktif untuk siswa dan guru.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div>© 2025 Literasi Digital • Demo HTML App</div>
+  </footer>
+
+  <!-- Notifikasi -->
+  <div id="notif" class="notif">🔔 Yuk, submit karya digitalmu!</div>
+
+  <!-- Clock -->
+  <div class="clock" id="clock"></div>
+
+  <!-- Chat Widget -->
+  <div class="chat-bubble" onclick="toggleChat()">💬</div>
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">Chat Support</div>
+    <div class="chat-body" id="chatBody">
+      <div>👋 Halo, ada yang bisa kami bantu?</div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="chatMsg" placeholder="Tulis pesan..."/>
+      <button onclick="sendMsg()">➤</button>
+    </div>
+  </div>
+
+  <script>
+    function showView(id,btn){
+      document.querySelectorAll('.view').forEach(v=>v.style.display='none');
+      document.getElementById(id).style.display='block';
+      document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function showNotif(){
+      const n = document.getElementById('notif');
+      n.classList.add('show');
+      setTimeout(()=>{n.classList.remove('show')}, 4000);
+    }
+    window.onload = ()=>{ setTimeout(showNotif,2000); };
+
+    // Clock
+    function updateClock(){
+      const now = new Date();
+      document.getElementById("clock").innerText = 
+        now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    }
+    setInterval(updateClock,1000); updateClock();
+
+    // Chat
+    function toggleChat(){
+      const w=document.getElementById('chatWindow');
+      w.style.display=(w.style.display==='flex')?'none':'flex';
+      if(w.style.display==='flex') w.style.display='flex';
+    }
+    function sendMsg(){
+      const input=document.getElementById('chatMsg');
+      if(input.value.trim()!==""){
+        const div=document.createElement('div');
+        div.textContent="🙋 "+input.value;
+        document.getElementById('chatBody').appendChild(div);
+        input.value="";
+      }
+    }
+
+    // Slider
+    const slides = document.getElementById("slides");
+    const dotsContainer = document.getElementById("dots");
+    const totalSlides = slides.children.length;
+    let index = 0;
+
+    for(let i=0;i<totalSlides;i++){
+      const dot=document.createElement("span");
+      dot.classList.add("dot");
+      if(i===0) dot.classList.add("active");
+      dot.onclick=()=>moveToSlide(i);
+      dotsContainer.appendChild(dot);
+    }
+    function moveToSlide(i){
+      index=i;
+      slides.style.transform=`translateX(-${i*100}%)`;
+      updateDots();
+    }
+    function updateDots(){
+      document.querySelectorAll(".dot").forEach((d,idx)=>{
+        d.classList.toggle("active",idx===index);
+      });
+    }
+    setInterval(()=>{
+      index=(index+1)%totalSlides;
+      moveToSlide(index);
+    },5000);
+  </script>
+</body>
+</html>
