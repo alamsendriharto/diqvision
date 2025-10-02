@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Digital Literacy — Demo App</title>
+  <style>
+    :root{
+      --bg:#f3f6fb; --card:#ffffff; --accent:#1565c0; --muted:#6b7280;
+      --success:#059669; --danger:#dc2626;
+      --maxw:1100px;
+      --radius:10px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:#0f172a;line-height:1.45}
+    .container{max-width:var(--maxw);margin:28px auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    h1{margin:0;font-size:20px}
+    nav{display:flex;gap:8px}
+    button.btn{background:transparent;border:1px solid #d1d5db;padding:8px 12px;border-radius:8px;cursor:pointer}
+    button.btn.primary{background:var(--accent);color:#fff;border-color:transparent}
+    .grid{display:grid;gap:16px}
+    .cols-3{grid-template-columns:repeat(3,1fr)}
+    .cols-2{grid-template-columns:repeat(2,1fr)}
+    .card{background:var(--card);padding:16px;border-radius:var(--radius);box-shadow:0 4px 12px rgba(2,6,23,0.06)}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef2ff;color:var(--accent);font-weight:600}
+    .pilar-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .pilar{padding:14px;border-radius:10px;background:linear-gradient(180deg,#fff,#f8fafc);border:1px solid #e6eef9}
+    .nav-active{background:var(--accent);color:#fff;border-color:transparent}
+    .small{font-size:13px;color:var(--muted)}
+    .list{display:flex;flex-direction:column;gap:8px}
+    input, textarea, select{width:100%;padding:10px;border-radius:8px;border:1px solid #e5e7eb}
+    label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
+    .hstack{display:flex;gap:8px;align-items:center}
+    .center{display:flex;align-items:center;justify-content:center}
+    .img-thumb{max-width:120px;border-radius:8px;display:block}
+    .profile-avatar{width:56px;height:56px;border-radius:999px;background:#e2e8f0;display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:#1f2937}
+    footer{margin-top:22px;text-align:center;color:var(--muted);font-size:13px}
+    @media (max-width:800px){.cols-3,.cols-2,.pilar-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Digital Literacy — Demo App</h1>
+        <div class="small">Education: 4 Pillars • Simple school app (attendance, submit work, profiles)</div>
+      </div>
+      <nav>
+        <button class="btn nav-btn nav-home nav-active" data-view="home">Home</button>
+        <button class="btn nav-btn" data-view="attendance">Absen Karya</button>
+        <button class="btn nav-btn" data-view="submit">Submit Karya</button>
+        <button class="btn nav-btn" data-view="profiles">Profil Pembuat</button>
+      </nav>
+    </header>
+
+    <main style="margin-top:18px">
+      <!-- HOME / DASHBOARD -->
+      <section id="view-home" class="view card">
+        <div class="grid cols-3" style="align-items:start">
+          <div>
+            <div class="card" style="margin-bottom:12px">
+              <div class="hstack" style="justify-content:space-between">
+                <div>
+                  <div class="pill">Digital Literacy</div>
+                  <h2 style="margin:10px 0 4px">Education of the 4 Pillars</h2>
+                  <p class="small">Learn the essential pillars of digital literacy for students and teachers.</p>
+                </div>
+                <div class="center" style="min-width:120px">
+                  <button class="btn primary" onclick="showView('submit')">Submit Your Work</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3 style="margin-top:0">Quick Access</h3>
+              <div style="margin-top:8px" class="list">
+                <button class="btn" onclick="showView('attendance')">Absen Karya</button>
+                <button class="btn" onclick="showView('submit')">Submit Karya</button>
+                <button class="btn" onclick="showView('profiles')">Profil Pembuat Karya</button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card">
+              <h3 style="margin-top:0">4 Pillars</h3>
+              <div class="pilar-grid" style="margin-top:12px">
+                <div class="pilar">
+                  <strong>Digital Skills</strong>
+                  <p class="small">Basic digital skills such as using tools, searching effectively, and content creation.</p>
+                </div>
+                <div class="pilar">
+                  <strong>Digital Safety</strong>
+                  <p class="small">Protecting privacy, strong passwords, and safe online behavior.</p>
+                </div>
+                <div class="pilar">
+                  <strong>Digital Ethics</strong>
+                  <p class="small">Respect copyright, avoid plagiarism, and responsible communication.</p>
+                </div>
+                <div class="pilar">
+                  <strong>Digital Culture</strong>
+                  <p class="small">Understanding online communities and critical consumption of media.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" style="margin-top:12px">
+              <h3 style="margin-top:0">Tips</h3>
+              <ol style="padding-left:18px;margin-top:8px">
+                <li class="small">Verify sources before sharing information.</li>
+                <li class="small">Use strong unique passwords and enable 2FA where possible.</li>
+                <li class="small">Respect others online and ask permission before sharing someone else's work.</li>
+              </ol>
+            </div>
+          </div>
+
+          <div>
+            <div class="card">
+              <h3 style="margin-top:0">Latest Submissions</h3>
+              <div id="recent-works" style="margin-top:10px" class="list small">
+                <!-- filled by JS -->
+              </div>
+            </div>
+
+            <div class="card" style="margin-top:12px">
+              <h3 style="margin-top:0">Statistics</h3>
+              <div class="small" id="stats">
+                <!-- filled by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ATTENDANCE -->
+      <section id="view-attendance" class="view" style="display:none">
+        <div class="card">
+          <h2 style="margin-top:0">Absen Karya</h2>
+          <p class="small">Isi daftar hadir kegiatan literasi digital.</p>
+
+          <form id="attendance-form" onsubmit="handleAttendance(event)" style="margin-top:12px">
+            <div style="display:grid;gap:8px">
+              <div>
+                <label>Nama</label>
+                <input id="att-name" required placeholder="Nama lengkap" />
+              </div>
+              <div>
+                <label>Kelas / Instansi</label>
+                <input id="att-class" placeholder="Contoh: XI IPA 1 / SMP 2" />
+              </div>
+              <div>
+                <label>Tanggal</label>
+                <input id="att-date" type="date" />
+              </div>
+              <div class="hstack">
+                <button class="btn primary" type="submit">Absen Sekarang</button>
+                <button class="btn" type="button" onclick="clearAttendance()">Clear All (dev)</button>
+              </div>
+            </div>
+          </form>
+
+          <div style="margin-top:16px">
+            <h3 style="margin:6px 0">Daftar Absen</h3>
+            <div id="attendance-list" class="list small"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUBMIT -->
+      <section id="view-submit" class="view" style="display:none">
+        <div class="card">
+          <h2 style="margin-top:0">Submit Karya</h2>
+          <p class="small">Unggah karya digital: image / pdf / video / atau berikan link.</p>
+
+          <form id="submit-form" onsubmit="handleSubmit(event)" style="margin-top:12px">
+            <div style="display:grid;gap:10px">
+              <div>
+                <label>Nama Pembuat</label>
+                <input id="work-name" required placeholder="Nama pembuat karya" />
+              </div>
+              <div>
+                <label>Email (opsional)</label>
+                <input id="work-email" placeholder="example@domain.com" />
+              </div>
+              <div>
+                <label>Judul Karya</label>
+                <input id="work-title" required placeholder="Judul karya" />
+              </div>
+              <div>
+                <label>Deskripsi Singkat</label>
+                <textarea id="work-desc" rows="3" placeholder="Deskripsikan karya (tujuan, tools, dll)"></textarea>
+              </div>
+              <div>
+                <label>File (image/pdf/video) atau kosongkan untuk link</label>
+                <input id="work-file" type="file" accept="image/*,video/*,.pdf" />
+              </div>
+              <div>
+                <label>Atau masukkan Link (YouTube / Google Drive / URL)</label>
+                <input id="work-link" placeholder="https://..." />
+              </div>
+
+              <div class="hstack">
+                <button class="btn primary" type="submit">Submit Karya</button>
+                <button class="btn" type="button" onclick="resetSubmitForm()">Reset</button>
+              </div>
+            </div>
+          </form>
+
+          <div style="margin-top:16px">
+            <h3 style="margin:6px 0">Semua Karya</h3>
+            <div id="works-list" class="list small"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROFILES -->
+      <section id="view-profiles" class="view" style="display:none">
+        <div class="card">
+          <h2 style="margin-top:0">Profil Pembuat Karya</h2>
+          <p class="small">Klik nama untuk melihat portofolio karya yang di-submit.</p>
+
+          <div style="margin-top:12px" id="profiles-list" class="list small"></div>
+
+          <div id="profile-view" style="margin-top:12px;display:none" class="card">
+            <div style="display:flex;gap:12px;align-items:center">
+              <div id="pv-avatar" class="profile-avatar">A</div>
+              <div>
+                <div id="pv-name" style="font-weight:700"></div>
+                <div id="pv-email" class="small"></div>
+              </div>
+            </div>
+            <div style="margin-top:12px">
+              <h4 style="margin:6px 0">Karya oleh <span id="pv-name2"></span></h4>
+              <div id="pv-works" class="list small"></div>
+            </div>
+            <div style="margin-top:10px" class="hstack">
+              <button class="btn" onclick="closeProfile()">Close</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      <div class="small">Save this file as <strong>index.html</strong> and push to GitHub. Demo uses localStorage (no backend).</div>
+    </footer>
+  </div>
+
+  <script>
+    // Simple app state & storage keys
+    const STORAGE = {
+      attendance: 'dl_attendance_v1',
+      works: 'dl_works_v1'
+    };
+
+    // Utilities
+    function $(id){return document.getElementById(id)}
+    function loadJSON(key){ try{ return JSON.parse(localStorage.getItem(key) || '[]') }catch(e){return []} }
+    function saveJSON(key,val){ localStorage.setItem(key, JSON.stringify(val)) }
+
+    // Initialize sample data if empty
+    if(!localStorage.getItem(STORAGE.works)){
+      const sample = [
+        {id:'w1',name:'Siti Nur',email:'siti@example.com',title:'Poster Anti-Hoax',desc:'Poster edukasi memverifikasi sumber',file:null,link:'',date: new Date().toISOString()},
+        {id:'w2',name:'Agus',email:'',title:'Video Privasi',desc:'Video singkat tips privasi',file:null,link:'https://www.youtube.com/',date: new Date().toISOString()}
+      ];
+      saveJSON(STORAGE.works,sample);
+    }
+
+    // Navigation
+    const navButtons = document.querySelectorAll('.nav-btn');
+    navButtons.forEach(btn => btn.addEventListener('click', ()=> {
+      navButtons.forEach(b=>b.classList.remove('nav-active'));
+      btn.classList.add('nav-active');
+      showView(btn.dataset.view);
+    }));
+
+    function showView(name){
+      document.querySelectorAll('.view').forEach(v=>v.style.display='none');
+      $('view-'+name).style.display='block';
+      // render dynamic content per view
+      if(name === 'home'){renderRecent(); renderStats();}
+      if(name === 'attendance'){renderAttendance();}
+      if(name === 'submit'){renderWorks();}
+      if(name === 'profiles'){renderProfiles();}
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    // Attendance handlers
+    function handleAttendance(e){
+      e.preventDefault();
+      const name = $('att-name').value.trim();
+      const klass = $('att-class').value.trim();
+      const date = $('att-date').value || new Date().toISOString().slice(0,10);
+      if(!name){ alert('Nama harus diisi'); return; }
+      const arr = loadJSON(STORAGE.attendance) || [];
+      arr.unshift({id: 'a_'+Date.now(), name, klass, date});
+      saveJSON(STORAGE.attendance, arr);
+      $('attendance-form').reset();
+      renderAttendance();
+    }
+    function renderAttendance(){
+      const arr = loadJSON(STORAGE.attendance);
+      const el = $('attendance-list');
+      el.innerHTML = '';
+      if(!arr.length){ el.innerHTML = '<div class="small">Belum ada absen.</div>'; return; }
+      arr.forEach(a=>{
+        const d = document.createElement('div');
+        d.className = 'card hstack';
+        d.style.display='flex'; d.style.justifyContent='space-between'; d.style.alignItems='center';
+        d.innerHTML = `<div>
+            <div style="font-weight:600">${escapeHtml(a.name)}</div>
+            <div class="small">${escapeHtml(a.klass)} • ${escapeHtml(a.date)}</div>
+          </div>
+          <div class="small">${new Date(a.date).toLocaleDateString()}</div>`;
+        el.appendChild(d);
+      })
+    }
+    function clearAttendance(){
+      if(confirm('Clear all attendance?')){ localStorage.removeItem(STORAGE.attendance); renderAttendance(); }
+    }
+
+    // Submit work handlers
+    async function handleSubmit(ev){
+      ev.preventDefault();
+      const name = $('work-name').value.trim();
+      const email = $('work-email').value.trim();
+      const title = $('work-title').value.trim();
+      const desc = $('work-desc').value.trim();
+      const fileInput = $('work-file');
+      const link = $('work-link').value.trim();
+
+      if(!name || !title){ alert('Nama dan judul wajib diisi'); return; }
+
+      let fileData = null;
+      if(fileInput.files && fileInput.files[0]){
+        fileData = await fileToDataURL(fileInput.files[0]);
+      }
+
+      const works = loadJSON(STORAGE.works);
+      const item = { id: 'w_'+Date.now(), name, email, title, desc, file: fileData, link, date: new Date().toISOString() };
+      works.unshift(item);
+      saveJSON(STORAGE.works, works);
+
+      // reset
+      $('submit-form').reset();
+      alert('Karya berhasil di-submit');
+      renderWorks();
+    }
+
+    function fileToDataURL(file){
+      return new Promise((res, rej)=>{
+        const r = new FileReader();
+        r.onload = () => res({ name: file.name, type: file.type, data: r.result });
+        r.onerror = () => rej();
+        r.readAsDataURL(file);
+      })
+    }
+
+    function renderWorks(){
+      const works = loadJSON(STORAGE.works);
+      const el = $('works-list');
+      el.innerHTML = '';
+      if(!works.length){ el.innerHTML = '<div class="small">Belum ada karya.</div>'; return; }
+      works.forEach(w=>{
+        const d = document.createElement('div');
+        d.className = 'card';
+        let media = '';
+        if(w.file && w.file.type.startsWith('image/')){
+          media = `<img src="${w.file.data}" alt="" class="img-thumb" />`;
+        } else if(w.file && w.file.type.startsWith('video/')){
+          media = `<div><small class="small">Video uploaded — cannot preview in demo.</small></div>`;
+        } else if(w.link){
+          media = `<div class="small"><a href="${escapeAttr(w.link)}" target="_blank">Link: ${escapeHtml(w.link)}</a></div>`;
+        }
+        d.innerHTML = `<div style="display:flex;gap:12px">
+            <div style="flex:1">
+              <div style="font-weight:700">${escapeHtml(w.title)}</div>
+              <div class="small">By: <a href="#" onclick="viewProfileFromWork('${w.name.replaceAll(\"'\",\"\\'\")}')">${escapeHtml(w.name)}</a> • ${new Date(w.date).toLocaleString()}</div>
+              <div style="margin-top:8px" class="small">${escapeHtml(w.desc)}</div>
+            </div>
+            <div style="min-width:120px;text-align:right">${media}</div>
+          </div>`;
+        el.appendChild(d);
+      })
+      renderRecent();
+      renderStats();
+    }
+
+    // Profiles
+    function renderProfiles(){
+      const works = loadJSON(STORAGE.works);
+      const byAuthor = {};
+      works.forEach(w=>{
+        if(!byAuthor[w.name]) byAuthor[w.name] = { name:w.name, email:w.email || '', works:[] };
+        byAuthor[w.name].works.push(w);
+      });
+      const el = $('profiles-list');
+      el.innerHTML = '';
+      const arr = Object.values(byAuthor);
+      if(!arr.length){ el.innerHTML = '<div class="small">No profiles yet.</div>'; return; }
+      arr.forEach(p=>{
+        const d = document.createElement('div');
+        d.className = 'card hstack';
+        d.style.justifyContent='space-between';
+        d.innerHTML = `<div style="display:flex;gap:12px;align-items:center">
+            <div class="profile-avatar">${escapeHtml(p.name.charAt(0) || 'U')}</div>
+            <div>
+              <div style="font-weight:700">${escapeHtml(p.name)}</div>
+              <div class="small">${escapeHtml(p.email)}</div>
+            </div>
+          </div>
+          <div>
+            <button class="btn" onclick="openProfile('${escapeAttr(p.name)}')">View</button>
+          </div>`;
+        el.appendChild(d);
+      })
+    }
+
+    function openProfile(name){
+      const works = loadJSON(STORAGE.works).filter(w=>w.name===name);
+      $('pv-name').textContent = name;
+      $('pv-name2').textContent = name;
+      $('pv-email').textContent = works[0] && works[0].email ? works[0].email : '';
+      $('pv-avatar').textContent = name.charAt(0).toUpperCase();
+      const el = $('pv-works');
+      el.innerHTML = '';
+      if(!works.length){ el.innerHTML = '<div class="small">Belum ada karya.</div>'; }
+      works.forEach(w=>{
+        const d = document.createElement('div');
+        d.className = 'card';
+        d.innerHTML = `<div style="font-weight:600">${escapeHtml(w.title)}</div>
+                       <div class="small">${new Date(w.date).toLocaleString()}</div>
+                       <div class="small" style="margin-top:6px">${escapeHtml(w.desc)}</div>`;
+        if(w.file && w.file.type.startsWith('image/')){
+          const img = document.createElement('img');
+          img.src = w.file.data; img.className = 'img-thumb'; img.style.marginTop='8px';
+          d.appendChild(img);
+        } else if(w.link){
+          const a = document.createElement('a');
+          a.href = w.link; a.textContent = 'Open Link'; a.target='_blank'; a.style.display='block'; a.className='small'; a.style.marginTop='8px';
+          d.appendChild(a);
+        }
+        el.appendChild(d);
+      });
+      $('profile-view').style.display = 'block';
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function viewProfileFromWork(name){
+      openProfile(name);
+    }
+    function closeProfile(){ $('profile-view').style.display='none' }
+
+    // Home widgets
+    function renderRecent(){
+      const works = loadJSON(STORAGE.works).slice(0,5);
+      const el = $('recent-works'); el.innerHTML = '';
+      works.forEach(w=>{
+        const div = document.createElement('div'); div.className='card';
+        div.innerHTML = `<div style="font-weight:600">${escapeHtml(w.title)}</div><div class="small">${escapeHtml(w.name)} • ${new Date(w.date).toLocaleDateString()}</div>`;
+        el.appendChild(div);
+      });
+    }
+    function renderStats(){
+      const attendance = loadJSON(STORAGE.attendance).length || 0;
+      const works = loadJSON(STORAGE.works).length || 0;
+      $('stats').innerHTML = `<div>Attendance records: <strong>${attendance}</strong></div><div style="margin-top:6px">Total works submitted: <strong>${works}</strong></div>`;
+    }
+
+    // Helpers
+    function escapeHtml(s){ if(!s) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;') }
+    function escapeAttr(s){ if(!s) return ''; return String(s).replaceAll('\"','&quot;').replaceAll(\"'\",\"\\'\" ) }
+
+    function resetSubmitForm(){ $('submit-form').reset() }
+
+    // Boot
+    (function boot(){
+      showView('home');
+      renderAttendance();
+      renderWorks();
+      renderProfiles();
+    })();
+  </script>
+</body>
+</html>
