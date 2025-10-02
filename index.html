@@ -5,27 +5,32 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Literasi Digital — Demo App</title>
 <style>
-/* ========== Root & Base ========== */
-:root{
+/* ========== Root & Theme ========== */
+:root {
   --radius:16px;
   --glass: rgba(255,255,255,0.78);
-  --accent: #6b46ff;
+  --accent: #8b5cf6;
   --muted: #6b7280;
-  --bg-gradient: linear-gradient(270deg,#ffd1e6,#ffecd2,#d7fff8,#dbe2ff);
+  --bg-gradient: radial-gradient(circle at 30% 30%, #a78bfa, #6366f1, #4338ca, #0f172a);
   --card-shadow: 0 10px 30px rgba(16,24,40,0.08);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  --text-color:#0b1220;
+}
+[data-theme="dark"] {
+  --glass: rgba(20,20,30,0.7);
+  --accent: #a78bfa;
+  --muted: #9ca3af;
+  --bg-gradient: radial-gradient(circle at 30% 30%, #0f172a, #1e1b4b, #312e81);
+  --text-color:#f9fafb;
 }
 *{box-sizing:border-box}
-html,body{height:100%}
-body{
+body {
   margin:0;
-  min-height:100vh;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system;
   background:var(--bg-gradient);
-  background-size:1400% 1400%;
-  animation:gradMove 18s linear infinite;
-  color:#0b1220;
-  display:flex;flex-direction:column;
+  background-size:200% 200%;
+  animation:gradMove 18s ease infinite;
+  color:var(--text-color);
+  display:flex;flex-direction:column;min-height:100vh;
 }
 @keyframes gradMove {
   0%{background-position:0% 50%}
@@ -35,117 +40,81 @@ body{
 
 /* ========== Header ========== */
 .header {
-  width:100%;
-  padding:14px 18px;
-  backdrop-filter: blur(14px);
-  background:var(--glass);
-  display:flex;align-items:center;justify-content:space-between;
-  box-shadow:var(--card-shadow);
+  padding:14px 18px;display:flex;align-items:center;justify-content:space-between;
+  backdrop-filter: blur(14px);background:var(--glass);box-shadow:var(--card-shadow);
 }
-.brand {display:flex;gap:12px;align-items:center}
+.brand {display:flex;gap:10px;align-items:center}
 .brand .logo {
-  width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#00c2ff);
-  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;box-shadow:0 6px 18px rgba(107,70,255,0.18);
+  width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),#00c2ff);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;
+  box-shadow:0 6px 18px rgba(107,70,255,0.28);
 }
-.title {font-weight:700;font-size:18px}
 .top-nav {display:flex;gap:8px;align-items:center}
 .top-nav button {
-  border:0;padding:8px 12px;border-radius:12px;background:transparent;cursor:pointer;font-weight:600;color:rgba(11,17,32,0.75);
-  transition:all .24s;
+  border:0;padding:8px 12px;border-radius:12px;background:transparent;cursor:pointer;font-weight:600;
+  color:var(--text-color);opacity:.8;transition:.24s;
 }
 .top-nav button.active, .top-nav button:hover {
-  background:var(--accent); color:#fff; box-shadow:0 8px 20px rgba(107,70,255,0.16);
+  background:var(--accent);color:#fff;opacity:1;
+}
+.theme-toggle{cursor:pointer;font-size:18px;padding:6px 10px;border-radius:10px;border:0;background:transparent}
+
+/* ========== Layout & Cards ========== */
+.container {max-width:1160px;margin:20px auto;padding:0 18px;flex:1}
+.card {
+  background:var(--glass);backdrop-filter:blur(14px);border-radius:14px;
+  padding:16px;box-shadow:var(--card-shadow);
 }
 
-/* ========== Layout Main ========== */
-.container {max-width:1160px;margin:20px auto;padding:0 18px; width:100%}
-.card {background:var(--glass);backdrop-filter:blur(14px);border-radius:14px;padding:16px;box-shadow:var(--card-shadow);transition:transform .28s,box-shadow .28s}
-.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(16,24,40,0.12)}
-
-/* Page views with transition */
-.view {opacity:0;transform:translateY(6px);transition:opacity .36s ease,transform .36s ease;display:none}
+/* Page views */
+.view {display:none;opacity:0;transform:translateY(6px);transition:.36s}
 .view.show {display:block;opacity:1;transform:translateY(0)}
 
-/* ========== Slider ========== */
-.slider {position:relative;margin:18px 0;border-radius:14px;overflow:hidden}
-.slides {display:flex;transition:transform .56s cubic-bezier(.2,.9,.2,1);touch-action:pan-y;user-select:none}
-.slide {min-width:100%;position:relative;flex-shrink:0;display:block}
-.slide img{width:100%;height:420px;object-fit:cover;display:block}
-.slide-caption {
-  position:absolute;left:18px;bottom:18px;right:18px;
-  background:linear-gradient(180deg, rgba(0,0,0,0.16), rgba(0,0,0,0.36));
-  color:#fff;padding:16px;border-radius:10px;backdrop-filter:blur(6px);
-}
-.slide-caption h3{margin:0;font-size:20px}
-.slide-caption p{margin:6px 0 0;color:rgba(255,255,255,0.95);font-size:14px}
-.slider-controls {position:absolute;left:12px;top:12px;display:flex;gap:8px}
-.ctrl-btn{background:rgba(255,255,255,0.9);border-radius:999px;border:0;padding:8px;cursor:pointer;box-shadow:0 6px 16px rgba(16,24,40,0.12)}
-.dots {text-align:center;padding:10px 0}
-.dot {display:inline-block;width:10px;height:10px;margin:0 6px;background:rgba(0,0,0,0.12);border-radius:999px;cursor:pointer;transition:transform .2s,background .2s}
-.dot.active {background:var(--accent);transform:scale(1.25)}
+/* Slider */
+.slider{position:relative;margin:18px 0;overflow:hidden;border-radius:14px}
+.slides{display:flex;transition:.5s;touch-action:pan-y}
+.slide{min-width:100%}
+.slide img{width:100%;height:320px;object-fit:cover;display:block}
+.slide-caption{position:absolute;left:0;right:0;bottom:0;padding:16px;color:#fff;
+  background:linear-gradient(to top,rgba(0,0,0,.6),rgba(0,0,0,.1))}
+.dots{text-align:center;padding:8px}
+.dot{width:10px;height:10px;margin:0 5px;border-radius:50%;display:inline-block;background:#ccc;cursor:pointer}
+.dot.active{background:var(--accent)}
 
-/* ========== Video highlight (overlay like slider) ========== */
-.video-card {position:relative;border-radius:14px;overflow:hidden}
-.video-card iframe{width:100%;height:420px;border:0;display:block}
-.video-overlay {
-  position:absolute;left:16px;bottom:16px;background:linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.35));
-  color:#fff;padding:12px;border-radius:10px;backdrop-filter:blur(6px)
-}
+/* Pillars */
+.pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px}
+.pillar{padding:14px;text-align:center;border-radius:12px;cursor:pointer;background:var(--glass);transition:.3s}
+.pillar:hover{transform:translateY(-6px);box-shadow:0 10px 24px rgba(0,0,0,.2)}
 
-/* ========== Pillars (interactive) ========== */
-.pillars {display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
-.pillar {
-  background:linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.78));
-  border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:transform .28s,box-shadow .28s;
-  box-shadow:0 8px 20px rgba(16,24,40,0.06)
-}
-.pillar:hover{transform:translateY(-8px) scale(1.03);box-shadow:0 20px 46px rgba(16,24,40,0.12)}
-.pillar h4{margin:6px 0;font-size:16px}
-.pillar p{margin:0;color:var(--muted);font-size:13px}
-
-/* ========== News list (cards with overlay preview) ========== */
-.news-row {display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;margin-top:18px}
-.news-item {
-  min-width:300px;background:linear-gradient(180deg,rgba(255,255,255,0.92), rgba(255,255,255,0.86));
-  border-radius:12px;overflow:hidden;box-shadow:0 12px 30px rgba(16,24,40,0.06);flex:0 0 auto;
-}
-.news-thumb{height:140px;object-fit:cover;width:100%;display:block}
+/* News scroll */
+.news-row{display:flex;gap:14px;overflow-x:auto;padding:10px 0}
+.news-item{min-width:260px;background:var(--glass);border-radius:12px;overflow:hidden;flex:0 0 auto}
+.news-thumb{width:100%;height:140px;object-fit:cover}
 .news-body{padding:12px}
-.news-body h3{margin:0;font-size:16px}
-.news-body p{margin:8px 0 0;color:var(--muted);font-size:13px}
+.news-body h3{margin:0;font-size:15px}
 
-/* ========== Chat & Clock & FAB ========== */
-.chat-bubble {position:fixed;bottom:22px;right:22px;width:60px;height:60px;border-radius:999px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 16px 40px rgba(107,70,255,0.2);z-index:1200}
-.chat-window {position:fixed;bottom:92px;right:22px;width:320px;height:420px;border-radius:14px;display:none;flex-direction:column;overflow:hidden;z-index:1200;background:var(--glass);backdrop-filter:blur(12px);box-shadow:var(--card-shadow);}
-.chat-header{padding:12px;background:linear-gradient(90deg,var(--accent),#00c2ff);color:#fff;font-weight:700}
-.chat-body{padding:12px;flex:1;overflow:auto;font-size:14px}
-.chat-input{display:flex;border-top:1px solid rgba(11,17,32,0.06)}
-.chat-input input{flex:1;padding:10px;border:0;outline:none}
-.chat-input button{background:var(--accent);border:0;color:#fff;padding:10px;cursor:pointer}
+/* Bottom nav */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:1000;background:var(--glass);
+  backdrop-filter:blur(12px);display:flex;justify-content:space-around;padding:10px 0;box-shadow:0 -4px 16px rgba(0,0,0,.1)}
+.bottom-nav button{border:0;background:transparent;cursor:pointer;font-size:13px;color:var(--text-color);opacity:.8}
+.bottom-nav button.active{color:var(--accent);font-weight:600;opacity:1}
 
-.clock {position:fixed;left:18px;bottom:22px;background:var(--glass);backdrop-filter:blur(10px);padding:10px 14px;border-radius:12px;font-weight:700;z-index:1200;box-shadow:0 8px 24px rgba(16,24,40,0.08)}
-
-/* ========== Responsive ========== */
-@media (max-width:980px){
+/* Responsive */
+@media(max-width:768px){
+  .top-nav{display:none}
+  .bottom-nav{display:flex}
   .pillars{grid-template-columns:repeat(2,1fr)}
-  .news-row{padding-left:6px}
 }
-@media (max-width:560px){
+@media(max-width:480px){
   .pillars{grid-template-columns:1fr}
-  .slide img, .video-card iframe{height:220px}
+  .slide img{height:200px}
 }
 </style>
 </head>
 <body>
-  <!-- Header -->
   <div class="header">
-    <div class="brand">
-      <div class="logo">LD</div>
-      <div>
-        <div class="title">Literasi Digital</div>
-        <div style="font-size:12px;color:var(--muted)">Edu: 4 Pillars • Demo App</div>
-      </div>
-    </div>
+    <div class="brand"><div class="logo">LD</div><div><strong>Literasi Digital</strong></div></div>
     <div class="top-nav">
       <button class="nav-btn active" data-view="home">Home</button>
       <button class="nav-btn" data-view="absen">Absen</button>
@@ -153,383 +122,87 @@ body{
       <button class="nav-btn" data-view="profil">Profil</button>
       <button class="nav-btn" data-view="lms">LMS</button>
     </div>
+    <button id="themeToggle" class="theme-toggle">🌙</button>
   </div>
 
-  <!-- Main Container -->
   <div class="container">
-    <!-- HOME View -->
-    <section id="home" class="view show">
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-          <div>
-            <div style="font-weight:800;font-size:20px">Empat Pilar Literasi Digital</div>
-            <div style="color:var(--muted);margin-top:6px">Kuasai skill, etika, keamanan dan budaya digital.</div>
-          </div>
-          <div style="display:flex;gap:10px">
-            <button id="notif-btn" style="border:0;background:var(--accent);color:#fff;padding:8px 12px;border-radius:10px;cursor:pointer">Notify me</button>
-            <button id="fab" title="Submit Karya" style="border:0;background:linear-gradient(90deg,var(--accent),#00c2ff);color:#fff;padding:10px 14px;border-radius:12px;cursor:pointer">➕ Submit</button>
-          </div>
+    <!-- HOME -->
+    <section id="home" class="view show card">
+      <h2>Empat Pilar Literasi Digital</h2>
+      <div class="slider">
+        <div class="slides" id="slides">
+          <div class="slide"><img src="https://picsum.photos/seed/1/800/400"><div class="slide-caption">Verifikasi Informasi</div></div>
+          <div class="slide"><img src="https://picsum.photos/seed/2/800/400"><div class="slide-caption">Keamanan Data</div></div>
+          <div class="slide"><img src="https://picsum.photos/seed/3/800/400"><div class="slide-caption">Kreativitas Digital</div></div>
         </div>
+        <div class="dots" id="dots"></div>
+      </div>
 
-        <!-- Slider -->
-        <div class="slider" aria-hidden="false">
-          <div class="slides" id="slides">
-            <div class="slide">
-              <img src="https://picsum.photos/seed/slide1/1200/700" alt="s1"/>
-              <div class="slide-caption"><h3>Verifikasi Informasi</h3><p>Belajar langkah cepat memeriksa sumber & tanggal konten.</p></div>
-            </div>
-            <div class="slide">
-              <img src="https://picsum.photos/seed/slide2/1200/700" alt="s2"/>
-              <div class="slide-caption"><h3>Keamanan Data</h3><p>Tips praktis membuat password kuat & 2FA.</p></div>
-            </div>
-            <div class="slide">
-              <img src="https://picsum.photos/seed/slide3/1200/700" alt="s3"/>
-              <div class="slide-caption"><h3>Kreativitas Digital</h3><p>Mengubah ide jadi karya digital: poster, video, dan artikel.</p></div>
-            </div>
-          </div>
+      <div class="pillars">
+        <div class="pillar">💻<h4>Kecakapan</h4></div>
+        <div class="pillar">🔒<h4>Keamanan</h4></div>
+        <div class="pillar">🌐<h4>Budaya</h4></div>
+        <div class="pillar">🤝<h4>Etika</h4></div>
+      </div>
 
-          <!-- controls -->
-          <div style="position:absolute;inset:12px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none">
-            <div style="pointer-events:auto"><button class="ctrl-btn" id="prevBtn" aria-label="Prev">◀</button></div>
-            <div style="pointer-events:auto"><button class="ctrl-btn" id="nextBtn" aria-label="Next">▶</button></div>
-          </div>
-
-          <div class="dots" id="dots"></div>
-        </div>
-
-        <!-- Video highlight with overlay caption -->
-        <div class="video-card" style="margin-top:10px">
-          <!-- example embed (YouTube) -->
-          <iframe src="https://www.youtube.com/embed/5MgBikgcWnY" title="video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          <div class="video-overlay">
-            <strong>Video: Panduan Literasi Digital</strong>
-            <div style="font-size:13px;color:rgba(255,255,255,0.95);margin-top:6px">Ringkasan cepat: verifikasi sumber, etika berbagi, dan keamanan.</div>
-          </div>
-        </div>
-
-        <!-- Pillars interactive -->
-        <div class="pillars" style="margin-top:16px">
-          <div class="pillar" data-id="skill"><div style="font-size:28px">💻</div><h4>Kecakapan Digital</h4><p>Tools & content creation.</p></div>
-          <div class="pillar" data-id="safety"><div style="font-size:28px">🔒</div><h4>Keamanan Digital</h4><p>Privasi, password, 2FA.</p></div>
-          <div class="pillar" data-id="culture"><div style="font-size:28px">🌐</div><h4>Budaya Digital</h4><p>Interaksi positif & inklusif.</p></div>
-          <div class="pillar" data-id="ethics"><div style="font-size:28px">🤝</div><h4>Etika Digital</h4><p>Tanggung jawab & hak cipta.</p></div>
-        </div>
-
-        <!-- News horizontal scroll -->
-        <div style="margin-top:18px">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div style="font-weight:700">Berita & Update</div>
-            <div style="color:var(--muted);font-size:13px">Scroll →</div>
-          </div>
-          <div class="news-row" id="newsRow">
-            <div class="news-item">
-              <img class="news-thumb" src="https://picsum.photos/seed/news1/600/320" alt="">
-              <div class="news-body"><h3>Peluncuran Modul Baru</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div>
-            </div>
-            <div class="news-item">
-              <img class="news-thumb" src="https://picsum.photos/seed/news2/600/320" alt="">
-              <div class="news-body"><h3>Webinar Literasi</h3><p>Praesent tincidunt, sapien ut vehicula ullamcorper.</p></div>
-            </div>
-            <div class="news-item">
-              <img class="news-thumb" src="https://picsum.photos/seed/news3/600/320" alt="">
-              <div class="news-body"><h3>Tips Anti-Hoax</h3><p>Sed vitae justo nec nunc fermentum dapibus non at eros.</p></div>
-            </div>
-          </div>
-        </div>
-
+      <h3 style="margin-top:20px">Berita & Update</h3>
+      <div class="news-row">
+        <div class="news-item"><img class="news-thumb" src="https://picsum.photos/seed/n1/600/320"><div class="news-body"><h3>Peluncuran Modul Baru</h3></div></div>
+        <div class="news-item"><img class="news-thumb" src="https://picsum.photos/seed/n2/600/320"><div class="news-body"><h3>Webinar Literasi</h3></div></div>
+        <div class="news-item"><img class="news-thumb" src="https://picsum.photos/seed/n3/600/320"><div class="news-body"><h3>Tips Anti-Hoax</h3></div></div>
+        <div class="news-item"><img class="news-thumb" src="https://picsum.photos/seed/n4/600/320"><div class="news-body"><h3>Kampanye Digital</h3></div></div>
+        <div class="news-item"><img class="news-thumb" src="https://picsum.photos/seed/n5/600/320"><div class="news-body"><h3>Literasi Anak</h3></div></div>
+        <div class="news-item"><img class="news-thumb" src="https://picsum.photos/seed/n6/600/320"><div class="news-body"><h3>Komunitas Online</h3></div></div>
       </div>
     </section>
 
-    <!-- ABSEN View -->
-    <section id="absen" class="view card">
-      <h3>Absen Karya</h3>
-      <p style="color:var(--muted)">Form sederhana (demo):</p>
-      <form id="absenForm" onsubmit="event.preventDefault();addAttendance()">
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <input id="attName" placeholder="Nama" style="padding:10px;border-radius:10px;border:1px solid rgba(11,17,32,0.06);flex:1;min-width:180px">
-          <input id="attClass" placeholder="Kelas/Instansi" style="padding:10px;border-radius:10px;border:1px solid rgba(11,17,32,0.06);min-width:140px">
-          <button type="submit" style="background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;border:0;cursor:pointer">Absen</button>
-        </div>
-      </form>
-      <div id="attList" style="margin-top:12px"></div>
-    </section>
-
-    <!-- SUBMIT View -->
-    <section id="submit" class="view card" style="display:none">
-      <h3>Submit Karya</h3>
-      <p style="color:var(--muted)">Unggah karya (demo → disimpan di localStorage)</p>
-      <form id="workForm" onsubmit="event.preventDefault();submitWork()" style="display:grid;gap:8px">
-        <input id="workName" placeholder="Nama Pembuat" style="padding:10px;border-radius:10px;border:1px solid rgba(11,17,32,0.06)">
-        <input id="workTitle" placeholder="Judul Karya" style="padding:10px;border-radius:10px;border:1px solid rgba(11,17,32,0.06)">
-        <textarea id="workDesc" placeholder="Deskripsi singkat" rows="4" style="padding:10px;border-radius:10px;border:1px solid rgba(11,17,32,0.06)"></textarea>
-        <div style="display:flex;gap:8px">
-          <input id="workFile" type="file" accept="image/*,video/*,.pdf">
-          <button type="submit" style="background:linear-gradient(90deg,var(--accent),#00c2ff);color:#fff;border:0;padding:10px 14px;border-radius:10px;cursor:pointer">Submit</button>
-        </div>
-      </form>
-      <div id="worksList" style="margin-top:12px"></div>
-    </section>
-
-    <!-- PROFILE View -->
-    <section id="profil" class="view card" style="display:none">
-      <h3>Profil Pembuat</h3>
-      <p style="color:var(--muted)">Klik nama untuk lihat karya (demo)</p>
-      <div id="profilesArea"></div>
-    </section>
-
-    <!-- LMS View -->
-    <section id="lms" class="view card" style="display:none">
-      <h3>LMS Literasi Digital</h3>
-      <p style="color:var(--muted)">Modul singkat & kuis (demo placeholder).</p>
-      <div style="display:grid;gap:10px;margin-top:8px">
-        <div style="padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#f7f7ff);box-shadow:var(--card-shadow)">
-          <strong>Modul 1:</strong> Pengenalan Literasi Digital
-        </div>
-        <div style="padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#f7f7ff);box-shadow:var(--card-shadow)">
-          <strong>Modul 2:</strong> Keamanan dan Etika
-        </div>
-      </div>
-    </section>
-
-  </div> <!-- /container -->
-
-  <footer style="text-align:center;padding:18px 0;color:var(--muted);font-size:13px">© 2025 Literasi Digital — Demo</footer>
-
-  <!-- Notifications / Chat / Clock / FAB -->
-  <div id="notif" class="notif" style="display:none;position:fixed;top:22px;left:50%;transform:translateX(-50%);z-index:1400;padding:12px 16px;border-radius:12px;background:var(--glass);backdrop-filter:blur(10px);box-shadow:var(--card-shadow)">🔔 Yuk, submit karya digitalmu!</div>
-
-  <div id="fabBubble" class="chat-bubble" title="Chat / Quick Add" role="button">💬</div>
-  <div id="chatWin" class="chat-window" aria-hidden="true">
-    <div class="chat-header">Chat Support</div>
-    <div class="chat-body" id="chatBody">
-      <div style="opacity:0.9">👋 Halo! Butuh bantuan? Tulis pesanmu.</div>
-    </div>
-    <div class="chat-input">
-      <input id="chatInput" placeholder="Tulis pesan..." />
-      <button onclick="sendChat()">➤</button>
-    </div>
+    <section id="absen" class="view card"><h3>Absen (Demo)</h3></section>
+    <section id="submit" class="view card"><h3>Submit Karya</h3></section>
+    <section id="profil" class="view card"><h3>Profil</h3></section>
+    <section id="lms" class="view card"><h3>LMS</h3></section>
   </div>
 
-  <div id="clock" class="clock" aria-live="polite"></div>
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <button class="nav-btn active" data-view="home">🏠<br>Home</button>
+    <button class="nav-btn" data-view="absen">📝<br>Absen</button>
+    <button class="nav-btn" data-view="submit">➕<br>Submit</button>
+    <button class="nav-btn" data-view="profil">👤<br>Profil</button>
+    <button class="nav-btn" data-view="lms">📚<br>LMS</button>
+  </div>
 
 <script>
-/* ========== Page navigation with fade ========== */
-const navBtns = document.querySelectorAll('.nav-btn');
-navBtns.forEach(btn=>{
-  btn.addEventListener('click', ()=> {
-    const view = btn.dataset.view;
-    navigateTo(view, btn);
-  });
-});
-function navigateTo(viewId, btn){
-  // hide current
-  document.querySelectorAll('.view').forEach(v=>{
-    v.classList.remove('show');
-    setTimeout(()=>{ if(!v.classList.contains('show')) v.style.display='none'; }, 360);
-  });
-  // show target
-  const target = document.getElementById(viewId);
-  target.style.display='block';
-  requestAnimationFrame(()=> target.classList.add('show'));
-  // nav active
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
+/* Navigation */
+const navBtns=document.querySelectorAll('.nav-btn');
+function navigateTo(view,btn){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('show'));
+  const target=document.getElementById(view);
+  target.classList.add('show');
+  navBtns.forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
 }
+navBtns.forEach(btn=>btn.addEventListener('click',()=>navigateTo(btn.dataset.view,btn)));
 
-/* ========== Notification (iPhone style) ========== */
-const notifEl = document.getElementById('notif');
-function showNotif(text='🔔 Yuk, submit karya digitalmu!', timeout=3800){
-  notifEl.textContent = text;
-  notifEl.style.display='block';
-  notifEl.classList.add('show');
-  setTimeout(()=>{ notifEl.classList.remove('show'); setTimeout(()=>notifEl.style.display='none',420) }, timeout);
+/* Slider */
+let slideIndex=0;
+const slides=document.getElementById('slides');
+const dots=document.getElementById('dots');
+const total=slides.children.length;
+function showSlide(i){
+  slideIndex=(i+total)%total;
+  slides.style.transform=`translateX(${-slideIndex*100}%)`;
+  dots.querySelectorAll('.dot').forEach((d,idx)=>d.classList.toggle('active',idx===slideIndex));
 }
-// show one on load
-window.addEventListener('load', ()=> setTimeout(()=> showNotif(), 1100));
-document.getElementById('notif-btn').addEventListener('click', ()=> showNotif('🔔 Ingat submit karya sebelum deadline!'));
+for(let i=0;i<total;i++){const dot=document.createElement('span');dot.className='dot';dot.onclick=()=>showSlide(i);dots.appendChild(dot);}
+showSlide(0);
+setInterval(()=>showSlide(slideIndex+1),5000);
 
-/* ========== Clock ========== */
-function updateClock(){
-  const now = new Date();
-  const t = now.toLocaleTimeString('id-ID', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  document.getElementById('clock').textContent = t;
-}
-setInterval(updateClock,1000);
-updateClock();
-
-/* ========== Chat toggle & send ========== */
-const fab = document.getElementById('fabBubble');
-const chatWin = document.getElementById('chatWin');
-fab.addEventListener('click', ()=> {
-  const open = chatWin.style.display === 'flex';
-  chatWin.style.display = open ? 'none' : 'flex';
-  chatWin.setAttribute('aria-hidden', open ? 'true' : 'false');
-});
-function sendChat(){
-  const input = document.getElementById('chatInput');
-  if(!input.value.trim()) return;
-  const b = document.createElement('div');
-  b.textContent = '🙋 ' + input.value;
-  b.style.marginBottom='8px';
-  document.getElementById('chatBody').appendChild(b);
-  input.value='';
-  chatWin.scrollTop = chatWin.scrollHeight;
-}
-
-/* ========== Simple localStorage attendance & works ========== */
-function loadJSON(k){ try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return []} }
-function saveJSON(k,v){ localStorage.setItem(k,JSON.stringify(v)) }
-
-function addAttendance(){
-  const name = document.getElementById('attName').value.trim();
-  const klass = document.getElementById('attClass').value.trim();
-  if(!name){ alert('Masukkan nama'); return; }
-  const arr = loadJSON('ld_attendance'); arr.unshift({name,klass,date:new Date().toISOString()});
-  saveJSON('ld_attendance',arr);
-  document.getElementById('attName').value=''; document.getElementById('attClass').value='';
-  renderAttendance();
-}
-function renderAttendance(){
-  const el = document.getElementById('attList'); el.innerHTML='';
-  const arr = loadJSON('ld_attendance');
-  if(!arr.length){ el.innerHTML='<div style="color:var(--muted)">Belum ada absen.</div>'; return; }
-  arr.forEach(a=>{
-    const d = document.createElement('div');
-    d.style.padding='8px'; d.style.borderBottom='1px solid rgba(11,17,32,0.04)';
-    d.innerHTML = `<strong>${escapeHtml(a.name)}</strong> <div style="color:var(--muted);font-size:13px">${escapeHtml(a.klass)} • ${new Date(a.date).toLocaleString()}</div>`;
-    el.appendChild(d);
-  });
-}
-renderAttendance();
-
-function submitWork(){
-  const name = document.getElementById('workName').value.trim();
-  const title = document.getElementById('workTitle').value.trim();
-  const desc = document.getElementById('workDesc').value.trim();
-  if(!name||!title){ alert('Nama & Judul wajib'); return; }
-  const arr = loadJSON('ld_works');
-  arr.unshift({id:Date.now(),name,title,desc,date:new Date().toISOString()});
-  saveJSON('ld_works',arr);
-  document.getElementById('workForm').reset();
-  renderWorks();
-  showNotif('✅ Karya berhasil disubmit!');
-}
-function renderWorks(){
-  const list = loadJSON('ld_works');
-  const el = document.getElementById('worksList'); el.innerHTML='';
-  if(!list.length){ el.innerHTML='<div style="color:var(--muted)">Belum ada karya.</div>'; return; }
-  list.forEach(w=>{
-    const d=document.createElement('div'); d.style.padding='8px'; d.style.borderBottom='1px solid rgba(11,17,32,0.04)';
-    d.innerHTML = `<strong>${escapeHtml(w.title)}</strong><div style="color:var(--muted);font-size:13px">by ${escapeHtml(w.name)} • ${new Date(w.date).toLocaleString()}</div><div style="margin-top:6px">${escapeHtml(w.desc)}</div>`;
-    el.appendChild(d);
-  });
-}
-renderWorks();
-
-/* Profiles from works */
-function renderProfiles(){
-  const works = loadJSON('ld_works');
-  const by = {};
-  works.forEach(w=>{ if(!by[w.name]) by[w.name]=[]; by[w.name].push(w) });
-  const area = document.getElementById('profilesArea'); area.innerHTML='';
-  Object.keys(by).forEach(name=>{
-    const card = document.createElement('div'); card.className='card';
-    card.style.marginBottom='10px'; card.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center">
-      <div><strong>${escapeHtml(name)}</strong><div style="color:var(--muted);font-size:13px">${by[name].length} karya</div></div>
-      <button style="background:var(--accent);color:#fff;border:0;padding:8px 12px;border-radius:10px;cursor:pointer">View</button>
-    </div>`;
-    area.appendChild(card);
-  });
-}
-renderProfiles();
-
-/* ========== Slider logic: auto + dots + prev/next + drag (mouse & touch) ========== */
-const slidesEl = document.getElementById('slides');
-const dotsContainer = document.getElementById('dots');
-const slideCount = slidesEl.children.length;
-let current = 0;
-let isDragging=false, startX=0, currentTranslate=0, prevTranslate=0, animationID=0;
-let autoTimer = null;
-
-function initSlider(){
-  // create dots
-  for(let i=0;i<slideCount;i++){
-    const dot = document.createElement('div');
-    dot.className='dot'; if(i===0) dot.classList.add('active');
-    dot.addEventListener('click', ()=> goTo(i));
-    dotsContainer.appendChild(dot);
-  }
-  // prev/next
-  document.getElementById('prevBtn').addEventListener('click', ()=> goTo((current-1+slideCount)%slideCount));
-  document.getElementById('nextBtn').addEventListener('click', ()=> goTo((current+1)%slideCount));
-  // pointer events
-  Array.from(slidesEl.children).forEach((slide, index)=>{
-    slide.addEventListener('pointerdown', pointerDown(index));
-    slide.addEventListener('pointerup', pointerUp);
-    slide.addEventListener('pointerleave', pointerUp);
-    slide.addEventListener('pointermove', pointerMove);
-    slide.style.touchAction='pan-y';
-  });
-  startAuto();
-}
-function pointerDown(index){ return function(event){
-  isDragging=true; startX = event.clientX; slidesEl.style.transition='none'; cancelAuto();
-};}
-function pointerMove(event){
-  if(!isDragging) return;
-  const dx = event.clientX - startX;
-  slidesEl.style.transform = `translateX(${ -current*100 + (dx/slidesEl.clientWidth)*100 }%)`;
-}
-function pointerUp(event){
-  if(!isDragging) return;
-  isDragging=false;
-  const dx = event.clientX - startX;
-  const threshold = slidesEl.clientWidth * 0.2;
-  if(Math.abs(dx) > threshold){
-    if(dx < 0) goTo((current+1)%slideCount); else goTo((current-1+slideCount)%slideCount);
-  } else {
-    goTo(current);
-  }
-  startAuto();
-}
-function goTo(i){
-  current = i;
-  slidesEl.style.transition='transform .56s cubic-bezier(.2,.9,.2,1)';
-  slidesEl.style.transform = `translateX(-${i*100}%)`;
-  updateDots();
-}
-function updateDots(){
-  document.querySelectorAll('.dot').forEach((d,idx)=> d.classList.toggle('active', idx===current));
-}
-function startAuto(){
-  cancelAuto();
-  autoTimer = setInterval(()=> { goTo((current+1)%slideCount); }, 5000);
-}
-function cancelAuto(){ if(autoTimer) clearInterval(autoTimer); }
-
-initSlider();
-
-/* ========== helpers ========== */
-function escapeHtml(s){ if(!s) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
-
-/* ========== Small UI actions ========== */
-// FAB quick open submit
-document.getElementById('fab').addEventListener('click', ()=> {
-  navigateTo('submit');
-});
-document.getElementById('fabBubble').addEventListener('click', ()=> {
-  // open chat or quick add
-  const win = document.getElementById('chatWin');
-  win.style.display = (win.style.display==='flex') ? 'none' : 'flex';
-});
-
-/* allow keyboard left/right for slider when home visible */
-document.addEventListener('keydown', (e)=>{
-  if(document.getElementById('home').classList.contains('show')){
-    if(e.key==='ArrowLeft') goTo((current-1+slideCount)%slideCount);
-    if(e.key==='ArrowRight') goTo((current+1)%slideCount);
-  }
-});
+/* Theme toggle */
+const toggle=document.getElementById('themeToggle');
+toggle.onclick=()=>{
+  if(document.body.dataset.theme==='dark'){document.body.dataset.theme='';toggle.textContent='🌙';}
+  else{document.body.dataset.theme='dark';toggle.textContent='☀️';}
+};
 </script>
 </body>
 </html>
