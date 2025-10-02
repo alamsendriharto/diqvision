@@ -3,265 +3,533 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Literasi Digital</title>
+<title>Literasi Digital — Demo App</title>
 <style>
-:root {
-  --radius: 14px;
-  --card-bg: rgba(255,255,255,0.85);
-  --accent: #6366f1;
-  font-family: 'Inter', system-ui, sans-serif;
+/* ========== Root & Base ========== */
+:root{
+  --radius:16px;
+  --glass: rgba(255,255,255,0.78);
+  --accent: #6b46ff;
+  --muted: #6b7280;
+  --bg-gradient: linear-gradient(270deg,#ffd1e6,#ffecd2,#d7fff8,#dbe2ff);
+  --card-shadow: 0 10px 30px rgba(16,24,40,0.08);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
 }
-* {box-sizing:border-box;}
-body {
-  margin:0; color:#111827;
-  background: linear-gradient(270deg, #ff9a9e, #fad0c4, #fbc2eb, #a1c4fd, #c2ffd8);
-  background-size: 1000% 1000%;
-  animation: gradientMove 20s ease infinite;
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
   min-height:100vh;
+  background:var(--bg-gradient);
+  background-size:1400% 1400%;
+  animation:gradMove 18s linear infinite;
+  color:#0b1220;
+  display:flex;flex-direction:column;
 }
-@keyframes gradientMove {
-  0% {background-position:0% 50%;}
-  50% {background-position:100% 50%;}
-  100% {background-position:0% 50%;}
+@keyframes gradMove {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }
-header {
-  backdrop-filter: blur(12px);
-  background: var(--card-bg);
-  padding:14px 20px;
-  display:flex;justify-content:space-between;align-items:center;
-  border-radius:0 0 var(--radius) var(--radius);
-  box-shadow:0 4px 12px rgba(0,0,0,.1);
-}
-h1 {margin:0;font-size:20px;}
-nav button {
-  border:none; padding:8px 14px; border-radius:var(--radius);
-  background:transparent; cursor:pointer; font-weight:600; transition:.25s;
-}
-nav button.active, nav button:hover {
-  background:var(--accent);color:#fff;
-  box-shadow:0 4px 10px rgba(99,102,241,0.4);
-}
-main {padding:20px;max-width:1100px;margin:auto;}
-.card {
-  background: var(--card-bg); backdrop-filter: blur(16px);
-  border-radius: var(--radius); padding:16px; margin-bottom:18px;
-  box-shadow:0 8px 20px rgba(0,0,0,.08);
-  transition: transform .3s, box-shadow .3s, background .3s;
-}
-.card:hover {
-  transform: translateY(-6px) scale(1.03);
-  background: rgba(255,255,255,0.95);
-  box-shadow:0 12px 26px rgba(0,0,0,.15);
-}
-.grid {display:grid; gap:16px;}
-.cols-2 {grid-template-columns:repeat(2,1fr);}
-.pill {
-  display:inline-block;padding:6px 12px;border-radius:999px;
-  background:#e0e7ff;color:#4338ca;font-weight:600;font-size:13px;
-}
-footer {text-align:center;font-size:13px;color:#fff;margin:20px 0;}
 
-/* Notifikasi ala iPhone */
-.notif {
-  position: fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-20px);
-  background: rgba(255,255,255,0.9); backdrop-filter: blur(12px);
-  padding:14px 20px; border-radius:20px;
-  box-shadow:0 6px 20px rgba(0,0,0,0.15);
-  font-weight:500; color:#111827; opacity:0;
-  transition:opacity .4s, transform .4s; z-index:1000;
+/* ========== Header ========== */
+.header {
+  width:100%;
+  padding:14px 18px;
+  backdrop-filter: blur(14px);
+  background:var(--glass);
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:var(--card-shadow);
 }
-.notif.show {opacity:1; transform:translateX(-50%) translateY(0);}
+.brand {display:flex;gap:12px;align-items:center}
+.brand .logo {
+  width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#00c2ff);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;box-shadow:0 6px 18px rgba(107,70,255,0.18);
+}
+.title {font-weight:700;font-size:18px}
+.top-nav {display:flex;gap:8px;align-items:center}
+.top-nav button {
+  border:0;padding:8px 12px;border-radius:12px;background:transparent;cursor:pointer;font-weight:600;color:rgba(11,17,32,0.75);
+  transition:all .24s;
+}
+.top-nav button.active, .top-nav button:hover {
+  background:var(--accent); color:#fff; box-shadow:0 8px 20px rgba(107,70,255,0.16);
+}
 
-/* Slider smooth */
-.slider {position:relative;overflow:hidden;border-radius:var(--radius);margin:16px 0;}
-.slides {display:flex;transition:transform .6s ease;}
-.slide {min-width:100%;position:relative;}
-.slide img {width:100%;height:400px;object-fit:cover;border-radius:var(--radius);}
+/* ========== Layout Main ========== */
+.container {max-width:1160px;margin:20px auto;padding:0 18px; width:100%}
+.card {background:var(--glass);backdrop-filter:blur(14px);border-radius:14px;padding:16px;box-shadow:var(--card-shadow);transition:transform .28s,box-shadow .28s}
+.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(16,24,40,0.12)}
+
+/* Page views with transition */
+.view {opacity:0;transform:translateY(6px);transition:opacity .36s ease,transform .36s ease;display:none}
+.view.show {display:block;opacity:1;transform:translateY(0)}
+
+/* ========== Slider ========== */
+.slider {position:relative;margin:18px 0;border-radius:14px;overflow:hidden}
+.slides {display:flex;transition:transform .56s cubic-bezier(.2,.9,.2,1);touch-action:pan-y;user-select:none}
+.slide {min-width:100%;position:relative;flex-shrink:0;display:block}
+.slide img{width:100%;height:420px;object-fit:cover;display:block}
 .slide-caption {
-  position:absolute;bottom:0;left:0;right:0;
-  background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);
-  padding:16px;color:#fff;border-radius:0 0 var(--radius) var(--radius);
+  position:absolute;left:18px;bottom:18px;right:18px;
+  background:linear-gradient(180deg, rgba(0,0,0,0.16), rgba(0,0,0,0.36));
+  color:#fff;padding:16px;border-radius:10px;backdrop-filter:blur(6px);
 }
-.slide-caption h3 {margin:0;font-size:18px;}
-.slide-caption p {margin:4px 0 0;font-size:14px;opacity:0.9;}
-.dots {text-align:center;margin-top:8px;}
-.dot {
-  display:inline-block;width:12px;height:12px;margin:0 4px;
-  background:#ccc;border-radius:50%;cursor:pointer;transition:.3s;
-}
-.dot.active {background:var(--accent);transform:scale(1.2);}
+.slide-caption h3{margin:0;font-size:20px}
+.slide-caption p{margin:6px 0 0;color:rgba(255,255,255,0.95);font-size:14px}
+.slider-controls {position:absolute;left:12px;top:12px;display:flex;gap:8px}
+.ctrl-btn{background:rgba(255,255,255,0.9);border-radius:999px;border:0;padding:8px;cursor:pointer;box-shadow:0 6px 16px rgba(16,24,40,0.12)}
+.dots {text-align:center;padding:10px 0}
+.dot {display:inline-block;width:10px;height:10px;margin:0 6px;background:rgba(0,0,0,0.12);border-radius:999px;cursor:pointer;transition:transform .2s,background .2s}
+.dot.active {background:var(--accent);transform:scale(1.25)}
 
-/* Chat widget */
-.chat-bubble {
-  position:fixed;bottom:20px;right:20px;width:60px;height:60px;
-  border-radius:50%;background:var(--accent);color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:28px;box-shadow:0 6px 14px rgba(0,0,0,.3); z-index:999;
+/* ========== Video highlight (overlay like slider) ========== */
+.video-card {position:relative;border-radius:14px;overflow:hidden}
+.video-card iframe{width:100%;height:420px;border:0;display:block}
+.video-overlay {
+  position:absolute;left:16px;bottom:16px;background:linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.35));
+  color:#fff;padding:12px;border-radius:10px;backdrop-filter:blur(6px)
 }
-.chat-window {
-  position:fixed;bottom:90px;right:20px;width:300px;height:400px;
-  background:var(--card-bg);backdrop-filter:blur(12px);
-  border-radius:var(--radius);box-shadow:0 8px 20px rgba(0,0,0,.25);
-  display:none;flex-direction:column;overflow:hidden; z-index:999;
-}
-.chat-header {background:var(--accent);color:#fff;padding:10px;font-weight:bold;}
-.chat-body {flex:1;padding:10px;font-size:14px;overflow-y:auto;}
-.chat-input {display:flex;border-top:1px solid #ddd;}
-.chat-input input {flex:1;padding:10px;border:none;outline:none;}
-.chat-input button {padding:10px;background:var(--accent);color:#fff;border:none;cursor:pointer;}
 
-/* Clock widget */
-.clock {
-  position:fixed;bottom:20px;left:20px;
-  background:var(--card-bg);backdrop-filter:blur(10px);
-  padding:8px 16px;border-radius:var(--radius);
-  font-weight:bold;font-size:14px;box-shadow:0 4px 10px rgba(0,0,0,.2); z-index:999;
+/* ========== Pillars (interactive) ========== */
+.pillars {display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+.pillar {
+  background:linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.78));
+  border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:transform .28s,box-shadow .28s;
+  box-shadow:0 8px 20px rgba(16,24,40,0.06)
+}
+.pillar:hover{transform:translateY(-8px) scale(1.03);box-shadow:0 20px 46px rgba(16,24,40,0.12)}
+.pillar h4{margin:6px 0;font-size:16px}
+.pillar p{margin:0;color:var(--muted);font-size:13px}
+
+/* ========== News list (cards with overlay preview) ========== */
+.news-row {display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;margin-top:18px}
+.news-item {
+  min-width:300px;background:linear-gradient(180deg,rgba(255,255,255,0.92), rgba(255,255,255,0.86));
+  border-radius:12px;overflow:hidden;box-shadow:0 12px 30px rgba(16,24,40,0.06);flex:0 0 auto;
+}
+.news-thumb{height:140px;object-fit:cover;width:100%;display:block}
+.news-body{padding:12px}
+.news-body h3{margin:0;font-size:16px}
+.news-body p{margin:8px 0 0;color:var(--muted);font-size:13px}
+
+/* ========== Chat & Clock & FAB ========== */
+.chat-bubble {position:fixed;bottom:22px;right:22px;width:60px;height:60px;border-radius:999px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 16px 40px rgba(107,70,255,0.2);z-index:1200}
+.chat-window {position:fixed;bottom:92px;right:22px;width:320px;height:420px;border-radius:14px;display:none;flex-direction:column;overflow:hidden;z-index:1200;background:var(--glass);backdrop-filter:blur(12px);box-shadow:var(--card-shadow);}
+.chat-header{padding:12px;background:linear-gradient(90deg,var(--accent),#00c2ff);color:#fff;font-weight:700}
+.chat-body{padding:12px;flex:1;overflow:auto;font-size:14px}
+.chat-input{display:flex;border-top:1px solid rgba(11,17,32,0.06)}
+.chat-input input{flex:1;padding:10px;border:0;outline:none}
+.chat-input button{background:var(--accent);border:0;color:#fff;padding:10px;cursor:pointer}
+
+.clock {position:fixed;left:18px;bottom:22px;background:var(--glass);backdrop-filter:blur(10px);padding:10px 14px;border-radius:12px;font-weight:700;z-index:1200;box-shadow:0 8px 24px rgba(16,24,40,0.08)}
+
+/* ========== Responsive ========== */
+@media (max-width:980px){
+  .pillars{grid-template-columns:repeat(2,1fr)}
+  .news-row{padding-left:6px}
+}
+@media (max-width:560px){
+  .pillars{grid-template-columns:1fr}
+  .slide img, .video-card iframe{height:220px}
 }
 </style>
 </head>
 <body>
-<header>
-  <h1>📱 Literasi Digital</h1>
-  <nav>
-    <button class="nav active" onclick="showView('home',this)">Home</button>
-    <button class="nav" onclick="showView('absen',this)">Absen</button>
-    <button class="nav" onclick="showView('submit',this)">Submit Karya</button>
-    <button class="nav" onclick="showView('profil',this)">Profil</button>
-    <button class="nav" onclick="showView('lms',this)">LMS</button>
-  </nav>
-</header>
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">
+      <div class="logo">LD</div>
+      <div>
+        <div class="title">Literasi Digital</div>
+        <div style="font-size:12px;color:var(--muted)">Edu: 4 Pillars • Demo App</div>
+      </div>
+    </div>
+    <div class="top-nav">
+      <button class="nav-btn active" data-view="home">Home</button>
+      <button class="nav-btn" data-view="absen">Absen</button>
+      <button class="nav-btn" data-view="submit">Submit</button>
+      <button class="nav-btn" data-view="profil">Profil</button>
+      <button class="nav-btn" data-view="lms">LMS</button>
+    </div>
+  </div>
 
-<main>
-  <!-- HOME -->
-  <section id="home" class="card view">
-    <div class="pill">Empat Pilar Literasi Digital</div>
+  <!-- Main Container -->
+  <div class="container">
+    <!-- HOME View -->
+    <section id="home" class="view show">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <div>
+            <div style="font-weight:800;font-size:20px">Empat Pilar Literasi Digital</div>
+            <div style="color:var(--muted);margin-top:6px">Kuasai skill, etika, keamanan dan budaya digital.</div>
+          </div>
+          <div style="display:flex;gap:10px">
+            <button id="notif-btn" style="border:0;background:var(--accent);color:#fff;padding:8px 12px;border-radius:10px;cursor:pointer">Notify me</button>
+            <button id="fab" title="Submit Karya" style="border:0;background:linear-gradient(90deg,var(--accent),#00c2ff);color:#fff;padding:10px 14px;border-radius:12px;cursor:pointer">➕ Submit</button>
+          </div>
+        </div>
 
-    <!-- Slider -->
-    <div class="slider">
-      <div class="slides" id="slides">
-        <div class="slide">
-          <img src="https://picsum.photos/seed/1/1100/400" alt="slide1"/>
-          <div class="slide-caption"><h3>Judul 1</h3><p>Deskripsi singkat 1</p></div>
+        <!-- Slider -->
+        <div class="slider" aria-hidden="false">
+          <div class="slides" id="slides">
+            <div class="slide">
+              <img src="https://picsum.photos/seed/slide1/1200/700" alt="s1"/>
+              <div class="slide-caption"><h3>Verifikasi Informasi</h3><p>Belajar langkah cepat memeriksa sumber & tanggal konten.</p></div>
+            </div>
+            <div class="slide">
+              <img src="https://picsum.photos/seed/slide2/1200/700" alt="s2"/>
+              <div class="slide-caption"><h3>Keamanan Data</h3><p>Tips praktis membuat password kuat & 2FA.</p></div>
+            </div>
+            <div class="slide">
+              <img src="https://picsum.photos/seed/slide3/1200/700" alt="s3"/>
+              <div class="slide-caption"><h3>Kreativitas Digital</h3><p>Mengubah ide jadi karya digital: poster, video, dan artikel.</p></div>
+            </div>
+          </div>
+
+          <!-- controls -->
+          <div style="position:absolute;inset:12px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none">
+            <div style="pointer-events:auto"><button class="ctrl-btn" id="prevBtn" aria-label="Prev">◀</button></div>
+            <div style="pointer-events:auto"><button class="ctrl-btn" id="nextBtn" aria-label="Next">▶</button></div>
+          </div>
+
+          <div class="dots" id="dots"></div>
         </div>
-        <div class="slide">
-          <img src="https://picsum.photos/seed/2/1100/400" alt="slide2"/>
-          <div class="slide-caption"><h3>Judul 2</h3><p>Deskripsi singkat 2</p></div>
+
+        <!-- Video highlight with overlay caption -->
+        <div class="video-card" style="margin-top:10px">
+          <!-- example embed (YouTube) -->
+          <iframe src="https://www.youtube.com/embed/5MgBikgcWnY" title="video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="video-overlay">
+            <strong>Video: Panduan Literasi Digital</strong>
+            <div style="font-size:13px;color:rgba(255,255,255,0.95);margin-top:6px">Ringkasan cepat: verifikasi sumber, etika berbagi, dan keamanan.</div>
+          </div>
         </div>
-        <div class="slide">
-          <img src="https://picsum.photos/seed/3/1100/400" alt="slide3"/>
-          <div class="slide-caption"><h3>Judul 3</h3><p>Deskripsi singkat 3</p></div>
+
+        <!-- Pillars interactive -->
+        <div class="pillars" style="margin-top:16px">
+          <div class="pillar" data-id="skill"><div style="font-size:28px">💻</div><h4>Kecakapan Digital</h4><p>Tools & content creation.</p></div>
+          <div class="pillar" data-id="safety"><div style="font-size:28px">🔒</div><h4>Keamanan Digital</h4><p>Privasi, password, 2FA.</p></div>
+          <div class="pillar" data-id="culture"><div style="font-size:28px">🌐</div><h4>Budaya Digital</h4><p>Interaksi positif & inklusif.</p></div>
+          <div class="pillar" data-id="ethics"><div style="font-size:28px">🤝</div><h4>Etika Digital</h4><p>Tanggung jawab & hak cipta.</p></div>
+        </div>
+
+        <!-- News horizontal scroll -->
+        <div style="margin-top:18px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-weight:700">Berita & Update</div>
+            <div style="color:var(--muted);font-size:13px">Scroll →</div>
+          </div>
+          <div class="news-row" id="newsRow">
+            <div class="news-item">
+              <img class="news-thumb" src="https://picsum.photos/seed/news1/600/320" alt="">
+              <div class="news-body"><h3>Peluncuran Modul Baru</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div>
+            </div>
+            <div class="news-item">
+              <img class="news-thumb" src="https://picsum.photos/seed/news2/600/320" alt="">
+              <div class="news-body"><h3>Webinar Literasi</h3><p>Praesent tincidunt, sapien ut vehicula ullamcorper.</p></div>
+            </div>
+            <div class="news-item">
+              <img class="news-thumb" src="https://picsum.photos/seed/news3/600/320" alt="">
+              <div class="news-body"><h3>Tips Anti-Hoax</h3><p>Sed vitae justo nec nunc fermentum dapibus non at eros.</p></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ABSEN View -->
+    <section id="absen" class="view card">
+      <h3>Absen Karya</h3>
+      <p style="color:var(--muted)">Form sederhana (demo):</p>
+      <form id="absenForm" onsubmit="event.preventDefault();addAttendance()">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input id="attName" placeholder="Nama" style="padding:10px;border-radius:10px;border:1px solid rgba(11,17,32,0.06);flex:1;min-width:180px">
+          <input id="attClass" placeholder="Kelas/Instansi" style="padding:10px;border-radius:10px;border:1px solid rgba(11,17,32,0.06);min-width:140px">
+          <button type="submit" style="background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;border:0;cursor:pointer">Absen</button>
+        </div>
+      </form>
+      <div id="attList" style="margin-top:12px"></div>
+    </section>
+
+    <!-- SUBMIT View -->
+    <section id="submit" class="view card" style="display:none">
+      <h3>Submit Karya</h3>
+      <p style="color:var(--muted)">Unggah karya (demo → disimpan di localStorage)</p>
+      <form id="workForm" onsubmit="event.preventDefault();submitWork()" style="display:grid;gap:8px">
+        <input id="workName" placeholder="Nama Pembuat" style="padding:10px;border-radius:10px;border:1px solid rgba(11,17,32,0.06)">
+        <input id="workTitle" placeholder="Judul Karya" style="padding:10px;border-radius:10px;border:1px solid rgba(11,17,32,0.06)">
+        <textarea id="workDesc" placeholder="Deskripsi singkat" rows="4" style="padding:10px;border-radius:10px;border:1px solid rgba(11,17,32,0.06)"></textarea>
+        <div style="display:flex;gap:8px">
+          <input id="workFile" type="file" accept="image/*,video/*,.pdf">
+          <button type="submit" style="background:linear-gradient(90deg,var(--accent),#00c2ff);color:#fff;border:0;padding:10px 14px;border-radius:10px;cursor:pointer">Submit</button>
+        </div>
+      </form>
+      <div id="worksList" style="margin-top:12px"></div>
+    </section>
+
+    <!-- PROFILE View -->
+    <section id="profil" class="view card" style="display:none">
+      <h3>Profil Pembuat</h3>
+      <p style="color:var(--muted)">Klik nama untuk lihat karya (demo)</p>
+      <div id="profilesArea"></div>
+    </section>
+
+    <!-- LMS View -->
+    <section id="lms" class="view card" style="display:none">
+      <h3>LMS Literasi Digital</h3>
+      <p style="color:var(--muted)">Modul singkat & kuis (demo placeholder).</p>
+      <div style="display:grid;gap:10px;margin-top:8px">
+        <div style="padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#f7f7ff);box-shadow:var(--card-shadow)">
+          <strong>Modul 1:</strong> Pengenalan Literasi Digital
+        </div>
+        <div style="padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#f7f7ff);box-shadow:var(--card-shadow)">
+          <strong>Modul 2:</strong> Keamanan dan Etika
         </div>
       </div>
-      <div class="dots" id="dots"></div>
+    </section>
+
+  </div> <!-- /container -->
+
+  <footer style="text-align:center;padding:18px 0;color:var(--muted);font-size:13px">© 2025 Literasi Digital — Demo</footer>
+
+  <!-- Notifications / Chat / Clock / FAB -->
+  <div id="notif" class="notif" style="display:none;position:fixed;top:22px;left:50%;transform:translateX(-50%);z-index:1400;padding:12px 16px;border-radius:12px;background:var(--glass);backdrop-filter:blur(10px);box-shadow:var(--card-shadow)">🔔 Yuk, submit karya digitalmu!</div>
+
+  <div id="fabBubble" class="chat-bubble" title="Chat / Quick Add" role="button">💬</div>
+  <div id="chatWin" class="chat-window" aria-hidden="true">
+    <div class="chat-header">Chat Support</div>
+    <div class="chat-body" id="chatBody">
+      <div style="opacity:0.9">👋 Halo! Butuh bantuan? Tulis pesanmu.</div>
     </div>
-
-    <div class="grid cols-2">
-      <div class="card"><b>Kecakapan Digital</b><br><small>Penguasaan dasar TIK, pencarian informasi, pembuatan konten.</small></div>
-      <div class="card"><b>Keamanan Digital</b><br><small>Perlindungan data pribadi, keamanan akun, etika penggunaan.</small></div>
-      <div class="card"><b>Budaya Digital</b><br><small>Interaksi sehat di dunia maya, menghargai perbedaan.</small></div>
-      <div class="card"><b>Etika Digital</b><br><small>Tanggung jawab, anti-plagiarisme, sopan santun online.</small></div>
+    <div class="chat-input">
+      <input id="chatInput" placeholder="Tulis pesan..." />
+      <button onclick="sendChat()">➤</button>
     </div>
-  </section>
-
-  <!-- ABSEN -->
-  <section id="absen" class="card view" style="display:none">
-    <h2>📋 Absen Karya</h2><p>Form absensi kegiatan literasi digital.</p>
-  </section>
-
-  <!-- SUBMIT -->
-  <section id="submit" class="card view" style="display:none">
-    <h2>📤 Submit Karya</h2><p>Unggah atau tulis karya digitalmu di sini.</p>
-  </section>
-
-  <!-- PROFIL -->
-  <section id="profil" class="card view" style="display:none">
-    <h2>👤 Profil</h2><p>Lihat profil pembuat karya.</p>
-  </section>
-
-  <!-- LMS -->
-  <section id="lms" class="card view" style="display:none">
-    <h2>🎓 LMS Literasi Digital</h2><p>Modul pembelajaran interaktif untuk siswa dan guru.</p>
-  </section>
-</main>
-
-<footer>
-  <div>© 2025 Literasi Digital • Demo HTML App</div>
-</footer>
-
-<!-- Notifikasi -->
-<div id="notif" class="notif">🔔 Yuk, submit karya digitalmu!</div>
-
-<!-- Clock -->
-<div class="clock" id="clock"></div>
-
-<!-- Chat -->
-<div class="chat-bubble" onclick="toggleChat()">💬</div>
-<div class="chat-window" id="chatWindow">
-  <div class="chat-header">Chat Support</div>
-  <div class="chat-body" id="chatBody"><div>👋 Halo, ada yang bisa kami bantu?</div></div>
-  <div class="chat-input">
-    <input type="text" id="chatMsg" placeholder="Tulis pesan..."/>
-    <button onclick="sendMsg()">➤</button>
   </div>
-</div>
+
+  <div id="clock" class="clock" aria-live="polite"></div>
 
 <script>
-function showView(id,btn){
-  document.querySelectorAll('.view').forEach(v=>v.style.display='none');
-  document.getElementById(id).style.display='block';
-  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+/* ========== Page navigation with fade ========== */
+const navBtns = document.querySelectorAll('.nav-btn');
+navBtns.forEach(btn=>{
+  btn.addEventListener('click', ()=> {
+    const view = btn.dataset.view;
+    navigateTo(view, btn);
+  });
+});
+function navigateTo(viewId, btn){
+  // hide current
+  document.querySelectorAll('.view').forEach(v=>{
+    v.classList.remove('show');
+    setTimeout(()=>{ if(!v.classList.contains('show')) v.style.display='none'; }, 360);
+  });
+  // show target
+  const target = document.getElementById(viewId);
+  target.style.display='block';
+  requestAnimationFrame(()=> target.classList.add('show'));
+  // nav active
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
 }
-function showNotif(){
-  const n=document.getElementById('notif');
-  n.classList.add('show');
-  setTimeout(()=>{n.classList.remove('show')},4000);
+
+/* ========== Notification (iPhone style) ========== */
+const notifEl = document.getElementById('notif');
+function showNotif(text='🔔 Yuk, submit karya digitalmu!', timeout=3800){
+  notifEl.textContent = text;
+  notifEl.style.display='block';
+  notifEl.classList.add('show');
+  setTimeout(()=>{ notifEl.classList.remove('show'); setTimeout(()=>notifEl.style.display='none',420) }, timeout);
 }
-window.onload=()=>{ setTimeout(showNotif,2000); };
-// Clock
+// show one on load
+window.addEventListener('load', ()=> setTimeout(()=> showNotif(), 1100));
+document.getElementById('notif-btn').addEventListener('click', ()=> showNotif('🔔 Ingat submit karya sebelum deadline!'));
+
+/* ========== Clock ========== */
 function updateClock(){
-  const now=new Date();
-  document.getElementById("clock").innerText =
-    now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const now = new Date();
+  const t = now.toLocaleTimeString('id-ID', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  document.getElementById('clock').textContent = t;
 }
-setInterval(updateClock,1000); updateClock();
-// Chat
-function toggleChat(){
-  const w=document.getElementById('chatWindow');
-  w.style.display=(w.style.display==='flex')?'none':'flex';
+setInterval(updateClock,1000);
+updateClock();
+
+/* ========== Chat toggle & send ========== */
+const fab = document.getElementById('fabBubble');
+const chatWin = document.getElementById('chatWin');
+fab.addEventListener('click', ()=> {
+  const open = chatWin.style.display === 'flex';
+  chatWin.style.display = open ? 'none' : 'flex';
+  chatWin.setAttribute('aria-hidden', open ? 'true' : 'false');
+});
+function sendChat(){
+  const input = document.getElementById('chatInput');
+  if(!input.value.trim()) return;
+  const b = document.createElement('div');
+  b.textContent = '🙋 ' + input.value;
+  b.style.marginBottom='8px';
+  document.getElementById('chatBody').appendChild(b);
+  input.value='';
+  chatWin.scrollTop = chatWin.scrollHeight;
 }
-function sendMsg(){
-  const input=document.getElementById('chatMsg');
-  if(input.value.trim()!==""){
-    const div=document.createElement('div');
-    div.textContent="🙋 "+input.value;
-    document.getElementById('chatBody').appendChild(div);
-    input.value="";
+
+/* ========== Simple localStorage attendance & works ========== */
+function loadJSON(k){ try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return []} }
+function saveJSON(k,v){ localStorage.setItem(k,JSON.stringify(v)) }
+
+function addAttendance(){
+  const name = document.getElementById('attName').value.trim();
+  const klass = document.getElementById('attClass').value.trim();
+  if(!name){ alert('Masukkan nama'); return; }
+  const arr = loadJSON('ld_attendance'); arr.unshift({name,klass,date:new Date().toISOString()});
+  saveJSON('ld_attendance',arr);
+  document.getElementById('attName').value=''; document.getElementById('attClass').value='';
+  renderAttendance();
+}
+function renderAttendance(){
+  const el = document.getElementById('attList'); el.innerHTML='';
+  const arr = loadJSON('ld_attendance');
+  if(!arr.length){ el.innerHTML='<div style="color:var(--muted)">Belum ada absen.</div>'; return; }
+  arr.forEach(a=>{
+    const d = document.createElement('div');
+    d.style.padding='8px'; d.style.borderBottom='1px solid rgba(11,17,32,0.04)';
+    d.innerHTML = `<strong>${escapeHtml(a.name)}</strong> <div style="color:var(--muted);font-size:13px">${escapeHtml(a.klass)} • ${new Date(a.date).toLocaleString()}</div>`;
+    el.appendChild(d);
+  });
+}
+renderAttendance();
+
+function submitWork(){
+  const name = document.getElementById('workName').value.trim();
+  const title = document.getElementById('workTitle').value.trim();
+  const desc = document.getElementById('workDesc').value.trim();
+  if(!name||!title){ alert('Nama & Judul wajib'); return; }
+  const arr = loadJSON('ld_works');
+  arr.unshift({id:Date.now(),name,title,desc,date:new Date().toISOString()});
+  saveJSON('ld_works',arr);
+  document.getElementById('workForm').reset();
+  renderWorks();
+  showNotif('✅ Karya berhasil disubmit!');
+}
+function renderWorks(){
+  const list = loadJSON('ld_works');
+  const el = document.getElementById('worksList'); el.innerHTML='';
+  if(!list.length){ el.innerHTML='<div style="color:var(--muted)">Belum ada karya.</div>'; return; }
+  list.forEach(w=>{
+    const d=document.createElement('div'); d.style.padding='8px'; d.style.borderBottom='1px solid rgba(11,17,32,0.04)';
+    d.innerHTML = `<strong>${escapeHtml(w.title)}</strong><div style="color:var(--muted);font-size:13px">by ${escapeHtml(w.name)} • ${new Date(w.date).toLocaleString()}</div><div style="margin-top:6px">${escapeHtml(w.desc)}</div>`;
+    el.appendChild(d);
+  });
+}
+renderWorks();
+
+/* Profiles from works */
+function renderProfiles(){
+  const works = loadJSON('ld_works');
+  const by = {};
+  works.forEach(w=>{ if(!by[w.name]) by[w.name]=[]; by[w.name].push(w) });
+  const area = document.getElementById('profilesArea'); area.innerHTML='';
+  Object.keys(by).forEach(name=>{
+    const card = document.createElement('div'); card.className='card';
+    card.style.marginBottom='10px'; card.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center">
+      <div><strong>${escapeHtml(name)}</strong><div style="color:var(--muted);font-size:13px">${by[name].length} karya</div></div>
+      <button style="background:var(--accent);color:#fff;border:0;padding:8px 12px;border-radius:10px;cursor:pointer">View</button>
+    </div>`;
+    area.appendChild(card);
+  });
+}
+renderProfiles();
+
+/* ========== Slider logic: auto + dots + prev/next + drag (mouse & touch) ========== */
+const slidesEl = document.getElementById('slides');
+const dotsContainer = document.getElementById('dots');
+const slideCount = slidesEl.children.length;
+let current = 0;
+let isDragging=false, startX=0, currentTranslate=0, prevTranslate=0, animationID=0;
+let autoTimer = null;
+
+function initSlider(){
+  // create dots
+  for(let i=0;i<slideCount;i++){
+    const dot = document.createElement('div');
+    dot.className='dot'; if(i===0) dot.classList.add('active');
+    dot.addEventListener('click', ()=> goTo(i));
+    dotsContainer.appendChild(dot);
   }
+  // prev/next
+  document.getElementById('prevBtn').addEventListener('click', ()=> goTo((current-1+slideCount)%slideCount));
+  document.getElementById('nextBtn').addEventListener('click', ()=> goTo((current+1)%slideCount));
+  // pointer events
+  Array.from(slidesEl.children).forEach((slide, index)=>{
+    slide.addEventListener('pointerdown', pointerDown(index));
+    slide.addEventListener('pointerup', pointerUp);
+    slide.addEventListener('pointerleave', pointerUp);
+    slide.addEventListener('pointermove', pointerMove);
+    slide.style.touchAction='pan-y';
+  });
+  startAuto();
 }
-// Slider
-const slides=document.getElementById("slides");
-const dotsContainer=document.getElementById("dots");
-const totalSlides=slides.children.length;
-let index=0;
-for(let i=0;i<totalSlides;i++){
-  const dot=document.createElement("span");
-  dot.classList.add("dot");
-  if(i===0) dot.classList.add("active");
-  dot.onclick=()=>moveToSlide(i);
-  dotsContainer.appendChild(dot);
+function pointerDown(index){ return function(event){
+  isDragging=true; startX = event.clientX; slidesEl.style.transition='none'; cancelAuto();
+};}
+function pointerMove(event){
+  if(!isDragging) return;
+  const dx = event.clientX - startX;
+  slidesEl.style.transform = `translateX(${ -current*100 + (dx/slidesEl.clientWidth)*100 }%)`;
 }
-function moveToSlide(i){
-  index=i;
-  slides.style.transform=`translateX(-${i*100}%)`;
+function pointerUp(event){
+  if(!isDragging) return;
+  isDragging=false;
+  const dx = event.clientX - startX;
+  const threshold = slidesEl.clientWidth * 0.2;
+  if(Math.abs(dx) > threshold){
+    if(dx < 0) goTo((current+1)%slideCount); else goTo((current-1+slideCount)%slideCount);
+  } else {
+    goTo(current);
+  }
+  startAuto();
+}
+function goTo(i){
+  current = i;
+  slidesEl.style.transition='transform .56s cubic-bezier(.2,.9,.2,1)';
+  slidesEl.style.transform = `translateX(-${i*100}%)`;
   updateDots();
 }
 function updateDots(){
-  document.querySelectorAll(".dot").forEach((d,idx)=>{
-    d.classList.toggle("active",idx===index);
-  });
+  document.querySelectorAll('.dot').forEach((d,idx)=> d.classList.toggle('active', idx===current));
 }
-setInterval(()=>{ index=(index+1)%totalSlides; moveToSlide(index); },5000);
+function startAuto(){
+  cancelAuto();
+  autoTimer = setInterval(()=> { goTo((current+1)%slideCount); }, 5000);
+}
+function cancelAuto(){ if(autoTimer) clearInterval(autoTimer); }
+
+initSlider();
+
+/* ========== helpers ========== */
+function escapeHtml(s){ if(!s) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+/* ========== Small UI actions ========== */
+// FAB quick open submit
+document.getElementById('fab').addEventListener('click', ()=> {
+  navigateTo('submit');
+});
+document.getElementById('fabBubble').addEventListener('click', ()=> {
+  // open chat or quick add
+  const win = document.getElementById('chatWin');
+  win.style.display = (win.style.display==='flex') ? 'none' : 'flex';
+});
+
+/* allow keyboard left/right for slider when home visible */
+document.addEventListener('keydown', (e)=>{
+  if(document.getElementById('home').classList.contains('show')){
+    if(e.key==='ArrowLeft') goTo((current-1+slideCount)%slideCount);
+    if(e.key==='ArrowRight') goTo((current+1)%slideCount);
+  }
+});
 </script>
 </body>
 </html>
