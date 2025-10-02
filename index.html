@@ -71,4 +71,59 @@
       border-radius: 15px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
       font-weight: 500;
-      di
+      display: none;
+      animation: slideDown 0.4s ease, fadeOut 0.5s ease 3s forwards;
+    }
+    @keyframes slideDown {
+      from {opacity: 0; transform: translate(-50%, -20px);}
+      to {opacity: 1; transform: translate(-50%, 0);}
+    }
+    @keyframes fadeOut {
+      to {opacity: 0; transform: translate(-50%, -20px);}
+    }
+
+    /* === Section Title === */
+    .section-title {
+      margin-top: 40px;
+      font-size: 1.8rem;
+      font-weight: bold;
+      text-shadow: 1px 1px 6px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌐 Digital Literacy App</h1>
+
+  <!-- Notification -->
+  <div id="notif" class="notification">📢 Yuk, submit karya digitalmu!</div>
+
+  <!-- 4 Pilar Literasi Digital -->
+  <div class="section-title">4 Pillars of Digital Literacy</div>
+  <div class="card-container">
+    <div class="card"><h2>💻 Digital Skills</h2><p>Learn how to use technology effectively.</p></div>
+    <div class="card"><h2>🔒 Digital Safety</h2><p>Stay safe and protect your data online.</p></div>
+    <div class="card"><h2>🤝 Digital Ethics</h2><p>Use technology responsibly and ethically.</p></div>
+    <div class="card"><h2>🌍 Digital Culture</h2><p>Be part of the global digital society.</p></div>
+  </div>
+
+  <!-- 3 Jendela Utama -->
+  <div class="section-title">Main Features</div>
+  <div class="card-container">
+    <div class="card"><h2>📝 Attendance</h2><p>Mark your presence in digital learning activities.</p></div>
+    <div class="card"><h2>📤 Submit Work</h2><p>Upload and showcase your digital projects.</p></div>
+    <div class="card"><h2>👤 Creator Profile</h2><p>View participant profiles and their works.</p></div>
+  </div>
+
+  <script>
+    // Show notification like iPhone
+    window.onload = function() {
+      const notif = document.getElementById('notif');
+      notif.style.display = 'block';
+      // Auto hide after 4s (already animated fade out)
+      setTimeout(() => { notif.style.display = 'none'; }, 4000);
+    };
+  </script>
+
+</body>
+</html>
