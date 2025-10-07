@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlurKarya | Pelacak Tugas Produktif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .task {
+            cursor: grab;
+            touch-action: none;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .task:active { cursor: grabbing; }
+        .dragging {
+            opacity: 0.5;
+            transform: rotate(2deg);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2), 0 4px 6px -2px rgba(0,0,0,0.1);
+        }
+        .drag-over {
+            border: 2px dashed #4f46e5;
+            background-color: rgba(238, 242, 255, 0.5);
+        }
+        .column-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid;
+        }
+        .task-count {
+            background-color: #e0e7ff;
+            color: #4f46e5;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 12px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.5s ease-out forwards;
+        }
+        @keyframes slideIn {
+            from { top: -100px; opacity: 0; }
+            to { top: 20px; opacity: 1; }
+        }
+        #trash-can {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            background-color: #ef4444;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        #trash-can.visible { bottom: 30px; }
+        #trash-can.drag-over { transform: translateX(-50%) scale(1.2); background-color: #dc2626; }
+
+        #score-display {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(5px);
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-weight: 600;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div id="ios-notification" class="notification">
+        <i class="fa-solid fa-pen-nib text-indigo-500"></i>
+        <p class="font-semibold text-gray-800">Yuk, berkarya!</p>
+    </div>
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8 flex flex-col items-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-white text-shadow-lg" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.3)">AlurKarya</h1>
+            <p class="text-white mt-2" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.3)">Atur alur kerja literasi digital Anda dengan semangat!</p>
+            <div id="score-display" class="mt-4">
+                <i class="fa-solid fa-star"></i> Poin: <span id="score">0</span>
+            </div>
+        </header>
+
+        <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Tambah Tugas Baru</h2>
+            <form id="addTaskForm" class="flex flex-col sm:flex-row gap-4">
+                <input type="text" id="taskInput" class="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="Tulis tugas baru di sini..." required>
+                <button type="submit" class="bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
+                    Tambah Tugas
+                </button>
+            </form>
+        </div>
+
+        <main id="kanbanBoard" class="kanban-board">
+            <div id="todo-col" class="bg-white/70 backdrop-blur-sm rounded-xl shadow-lg p-5">
+                <div class="column-header" style="border-color: #f59e0b;"><h3 class="text-xl font-bold text-amber-500">Akan Dikerjakan</h3><span id="todo-count" class="task-count">0</span></div>
+                <div class="tasks-container min-h-[200px] mt-4 space-y-4" data-status="todo"></div>
+            </div>
+            <div id="inprogress-col" class="bg-white/70 backdrop-blur-sm rounded-xl shadow-lg p-5">
+                <div class="column-header" style="border-color: #3b82f6;"><h3 class="text-xl font-bold text-blue-500">Sedang Dikerjakan</h3><span id="inprogress-count" class="task-count">0</span></div>
+                <div class="tasks-container min-h-[200px] mt-4 space-y-4" data-status="inprogress"></div>
+            </div>
+            <div id="done-col" class="bg-white/70 backdrop-blur-sm rounded-xl shadow-lg p-5">
+                <div class="column-header" style="border-color: #16a34a;"><h3 class="text-xl font-bold text-green-600">Selesai</h3><span id="done-count" class="task-count">0</span></div>
+                <div class="tasks-container min-h-[200px] mt-4 space-y-4" data-status="done"></div>
+            </div>
+        </main>
+    </div>
+    
+    <div id="trash-can"><i class="fa-solid fa-trash-can"></i></div>
+    <canvas id="confetti-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-50"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const addTaskForm = document.getElementById('addTaskForm');
+        const taskInput = document.getElementById('taskInput');
+        const columns = document.querySelectorAll('.tasks-container');
+        const trashCan = document.getElementById('trash-can');
+        const scoreElement = document.getElementById('score');
+        
+        let score = 0;
+        let tasks = [];
+        let draggedTask = null;
+
+        // --- Notifikasi ---
+        setTimeout(() => {
+            const notification = document.getElementById('ios-notification');
+            if (notification) {
+                notification.style.transition = 'all 0.5s ease';
+                notification.style.opacity = '0';
+                notification.style.top = '-100px';
+                setTimeout(() => notification.remove(), 500);
+            }
+        }, 3000);
+
+        // --- Confetti ---
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const myConfetti = confetti.create(confettiCanvas, { resize: true, useWorker: true });
+        const triggerConfetti = () => {
+            myConfetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+        };
+
+        const renderTasks = () => {
+            columns.forEach(col => col.innerHTML = '');
+            tasks.forEach(task => {
+                const container = document.querySelector(`[data-status="${task.status}"]`);
+                if(container) {
+                    const taskElement = createTaskElement(task.text, task.id);
+                    if (task.status === 'done') {
+                        taskElement.style.textDecoration = 'line-through';
+                        taskElement.style.color = '#555';
+                    }
+                    container.appendChild(taskElement);
+                }
+            });
+            updateTaskCounts();
+            updateScore();
+        };
+        
+        const createTaskElement = (text, id) => {
+            const taskEl = document.createElement('div');
+            taskEl.className = 'task bg-white border border-gray-200 p-4 rounded-lg shadow-sm hover:shadow-lg transition-shadow';
+            taskEl.setAttribute('draggable', 'true');
+            taskEl.setAttribute('data-id', id);
+            taskEl.textContent = text;
+            return taskEl;
+        };
+
+        const updateTaskCounts = () => {
+            document.getElementById('todo-count').textContent = tasks.filter(t => t.status === 'todo').length;
+            document.getElementById('inprogress-count').textContent = tasks.filter(t => t.status === 'inprogress').length;
+            document.getElementById('done-count').textContent = tasks.filter(t => t.status === 'done').length;
+        };
+
+        const updateScore = () => {
+            score = tasks.filter(t => t.status === 'done').length * 10;
+            scoreElement.textContent = score;
+        };
+
+        addTaskForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const taskText = taskInput.value.trim();
+            if (taskText) {
+                const newTask = {
+                    id: 'task-' + Date.now(),
+                    text: taskText,
+                    status: 'todo'
+                };
+                tasks.push(newTask);
+                taskInput.value = '';
+                renderTasks();
+            }
+        });
+
+        document.addEventListener('dragstart', (e) => {
+            if (e.target.classList.contains('task')) {
+                draggedTask = e.target;
+                setTimeout(() => e.target.classList.add('dragging'), 0);
+                trashCan.classList.add('visible');
+            }
+        });
+
+        document.addEventListener('dragend', () => {
+            if(draggedTask) {
+                draggedTask.classList.remove('dragging');
+                draggedTask = null;
+            }
+            trashCan.classList.remove('visible', 'drag-over');
+        });
+
+        columns.forEach(column => {
+            column.addEventListener('dragover', e => {
+                e.preventDefault();
+                column.classList.add('drag-over');
+            });
+            column.addEventListener('dragleave', () => column.classList.remove('drag-over'));
+            column.addEventListener('drop', e => {
+                e.preventDefault();
+                column.classList.remove('drag-over');
+                const taskId = draggedTask.dataset.id;
+                const newStatus = column.dataset.status;
+                const task = tasks.find(t => t.id === taskId);
+                
+                if (task.status !== 'done' && newStatus === 'done') {
+                    triggerConfetti();
+                }
+
+                task.status = newStatus;
+                renderTasks();
+            });
+        });
+
+        trashCan.addEventListener('dragover', e => {
+            e.preventDefault();
+            trashCan.classList.add('drag-over');
+        });
+        trashCan.addEventListener('dragleave', () => trashCan.classList.remove('drag-over'));
+        trashCan.addEventListener('drop', () => {
+            const taskId = draggedTask.dataset.id;
+            tasks = tasks.filter(t => t.id !== taskId);
+            renderTasks();
+        });
+
+        // --- Inisialisasi data awal ---
+        const initialTasks = [
+            { id: 'task-1', text: 'Rancang draf awal untuk postingan blog', status: 'todo' },
+            { id: 'task-2', text: 'Tulis konten untuk media sosial minggu ini', status: 'todo' },
+            { id: 'task-3', text: 'Riset kata kunci untuk artikel SEO', status: 'inprogress' },
+            { id: 'task-4', text: 'Publikasikan video tutorial terbaru', status: 'done' },
+        ];
+        tasks = initialTasks;
+        renderTasks();
+    });
+    </script>
+</body>
+</html>
+
