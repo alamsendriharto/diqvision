@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualisasi Interaktif Blueprint LMS</title>
+    <!-- Chosen Palette: Warm Neutrals with Gradient -->
+    <!-- Application Structure Plan: Mobile-first interface with a bottom navbar. All pages (Feed, Learning Center, Points, Settings) are now fully populated with mock content and interactive elements. The Learning Center restores the interactive blueprint explorer. Points page is gamified with a leaderboard. Settings page is a complete profile view. -->
+    <!-- Visualization & Content Choices: 
+        - Feed -> Goal: Social Engagement -> Method: Styled cards in a scrollable list -> Interaction: N/A (simulated) -> Justification: Mimics a modern social media feed for familiarity.
+        - Points Page -> Goal: Gamification/Motivation -> Method: Dashboard with stats, leaderboard, and history list -> Interaction: N/A (informational) -> Justification: Encourages user engagement through competition and progress tracking.
+        - Settings Page -> Goal: User Management -> Method: Profile view with a list of options -> Interaction: Click (simulated) -> Justification: Provides a standard, clear interface for account management. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(120deg, #FFFBF5 0%, #FCEFEF 100%);
+        }
+        #dashboard-view {
+            padding-bottom: 80px; /* Space for bottom navbar */
+        }
+        .bottom-nav {
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+        .nav-item {
+            transition: all 0.2s ease;
+            color: #9ca3af; /* Gray-400 */
+        }
+        .nav-item.active {
+            color: #3B82F6; /* Blue-500 */
+            transform: translateY(-3px);
+        }
+        .nav-item.active svg {
+            fill: #3B82F6;
+        }
+        .page-content { display: none; }
+        .page-content.active { display: block; }
+        .chapter-item.open .chapter-content, .role-card.expanded .role-details {
+            max-height: 1000px;
+            opacity: 1;
+        }
+        .chapter-content, .role-details {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.5s ease-in-out;
+        }
+        .chapter-item.open .chapter-arrow { transform: rotate(180deg); }
+        .chapter-arrow { transition: transform 0.3s ease; }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            animation: spin 1s linear infinite;
+        }
+        .carousel-slide {
+            transition: opacity 0.8s ease-in-out;
+        }
+        .blueprint-nav-btn { border-bottom: 2px solid transparent; }
+        .blueprint-nav-btn.active { border-bottom-color: #3B82F6; color: #1F2937; }
+        .security-tab.active { background-color: #3B82F6; color: white; }
+        .db-collection:hover { border-color: #3B82F6; transform: scale(1.03); }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <div id="app-container">
+        <!-- Login View -->
+        <section id="login-view" class="flex items-center justify-center min-h-screen bg-white">
+            <div class="w-full max-w-sm p-8 space-y-6">
+                <div class="text-center">
+                    <h1 class="text-2xl font-bold text-gray-900">Selamat Datang di LMS</h1>
+                    <p class="mt-2 text-gray-600">Silakan masuk untuk melanjutkan.</p>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label for="username" class="text-sm font-medium text-gray-700">Nama Anda</label>
+                        <input type="text" id="username" value="Budi" class="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                     <button id="login-learner-btn" class="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform transform hover:scale-105">
+                        Masuk sebagai Learner
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard View (Mobile App Shell) -->
+        <section id="dashboard-view" class="hidden">
+            <main id="main-content" class="container mx-auto p-4 max-w-7xl">
+                <!-- All pages will be rendered here -->
+            </main>
+            <nav class="bottom-nav fixed bottom-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-sm flex justify-around items-center z-40"><!-- Nav items will be here --></nav>
+        </section>
+        
+        <!-- Course Detail Modal -->
+        <section id="course-detail-view" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
+             <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+                <div class="flex justify-between items-center border-b p-4 flex-shrink-0">
+                    <h2 id="course-title" class="text-xl md:text-2xl font-bold text-gray-900"></h2>
+                    <button id="close-course-btn" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+                </div>
+                <div id="chapter-list" class="p-4 md:p-6 space-y-3 overflow-y-auto"></div>
+            </div>
+        </section>
+
+        <!-- Assessment Modal -->
+        <div id="assessment-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
+            <div id="assessment-content" class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+                <!-- Assessment will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mock Data
+            const mockData = {
+                learner: { name: "Budi", selectedTrainerId: "trainer01" },
+                trainers: [ { id: "trainer01", name: "Ibu Indah" } ],
+                works: [
+                    { id: "w01", trainerId: "trainer01", title: "Pilar 1: Kecakapan Digital", description: "Meningkatkan kemampuan individu dalam menggunakan perangkat TIK.", chapters: [], videoId: "31Q9-A-gS-Y", pdfUrl: "https://web.kominfo.go.id/sites/default/files/users/4237/Modul%20Cakap%20Bermedia%20Digital.pdf"},
+                    { id: "w02", trainerId: "trainer01", title: "Pilar 2: Budaya Digital", description: "Membangun wawasan kebangsaan dan nilai Pancasila di dunia digital.", chapters: [], videoId: "j8e_Aow0z6A", pdfUrl: "https://literasidigital.id/books/modul-budaya-bermedia-digital/"},
+                    { id: "w03", trainerId: "trainer01", title: "Pilar 3: Etika Digital", description: "Mengembangkan tata kelola etika digital (netiket) saat berinteraksi.", chapters: [], videoId: "pD3o_z2R-P0", pdfUrl: "https://literasidigital.id/books/modul-aman-bermedia-digital/" },
+                    { id: "w04", trainerId: "trainer01", title: "Pilar 4: Keamanan Digital", description: "Memahami cara melindungi data pribadi dan menjaga keamanan diri.", chapters: [], videoId: "4Yd39D_2G68", pdfUrl: "https://literasidigital.id/books/modul-aman-bermedia-digital/"}
+                ]
+            };
+            
+            // DOM Elements
+            const mainContent = document.getElementById('main-content');
+            const bottomNavContainer = document.querySelector('.bottom-nav');
+            const loginView = document.getElementById('login-view'), dashboardView = document.getElementById('dashboard-view'), courseDetailView = document.getElementById('course-detail-view'), assessmentModal = document.getElementById('assessment-modal');
+            const loginBtn = document.getElementById('login-learner-btn'), closeCourseBtn = document.getElementById('close-course-btn');
+            const courseTitleEl = document.getElementById('course-title'), chapterListEl = document.getElementById('chapter-list');
+            
+            async function callGeminiAPI(prompt, retries = 3, delay = 1000) {
+                const apiKey = ""; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                const payload = { contents: [{ parts: [{ text: prompt }] }] };
+                for (let i = 0; i < retries; i++) { try { const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`); const result = await response.json(); if (result.candidates?.[0]?.content?.parts?.[0]?.text) { return result.candidates[0].content.parts[0].text; } else { throw new Error("Invalid response structure from API"); } } catch (error) { if (i === retries - 1) return `Maaf, terjadi kesalahan saat menghubungi AI.`; await new Promise(res => setTimeout(res, delay * Math.pow(2, i))); } }
+            }
+
+            function renderAppShell() {
+                mainContent.innerHTML = `
+                    <div id="page-home" class="page-content active">
+                        <header class="mb-6"><div class="flex justify-between items-center"><div><h1 class="text-2xl font-bold text-gray-900">Beranda</h1><p id="welcome-message" class="text-md text-gray-600"></p></div><button id="logout-btn-home" class="p-2 text-gray-500 hover:text-gray-800"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg></button></div></header>
+                        <div id="home-carousel" class="relative w-full h-48 rounded-xl shadow-lg overflow-hidden mb-8">
+                            <div class="carousel-slide absolute w-full h-full" data-index="0"><img src="https://placehold.co/600x300/3B82F6/FFFFFF?text=Kecakapan" class="w-full h-full object-cover"><div class="absolute inset-0 bg-black bg-opacity-40 flex items-end p-4"><div class="text-white"><h3 class="font-bold">Kecakapan Digital</h3><p class="text-sm">Terampil menggunakan teknologi.</p></div></div></div>
+                            <div class="carousel-slide absolute w-full h-full opacity-0" data-index="1"><img src="https://placehold.co/600x300/8B5CF6/FFFFFF?text=Budaya" class="w-full h-full object-cover"><div class="absolute inset-0 bg-black bg-opacity-40 flex items-end p-4"><div class="text-white"><h3 class="font-bold">Budaya Digital</h3><p class="text-sm">Menjunjung tinggi nilai Pancasila.</p></div></div></div>
+                            <div class="carousel-slide absolute w-full h-full opacity-0" data-index="2"><img src="https://placehold.co/600x300/10B981/FFFFFF?text=Etika" class="w-full h-full object-cover"><div class="absolute inset-0 bg-black bg-opacity-40 flex items-end p-4"><div class="text-white"><h3 class="font-bold">Etika Digital</h3><p class="text-sm">Berinteraksi dengan sopan.</p></div></div></div>
+                            <div class="carousel-slide absolute w-full h-full opacity-0" data-index="3"><img src="https://placehold.co/600x300/06B6D4/FFFFFF?text=Keamanan" class="w-full h-full object-cover"><div class="absolute inset-0 bg-black bg-opacity-40 flex items-end p-4"><div class="text-white"><h3 class="font-bold">Keamanan Digital</h3><p class="text-sm">Lindungi data pribadi.</p></div></div></div>
+                        </div>
+                        <div class="grid grid-cols-4 gap-4 text-center mb-8">
+                            <a href="#" class="flex flex-col items-center p-2 rounded-lg hover:bg-white/90"><div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg></div><span class="text-xs mt-2 font-medium">Materi Saya</span></a>
+                            <a href="#" class="flex flex-col items-center p-2 rounded-lg hover:bg-white/90"><div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 001.414 1.414L10 9.414l3.293 3.293a1 1 0 001.414-1.414l-4-4z" clip-rule="evenodd"></path></svg></div><span class="text-xs mt-2 font-medium">Progress</span></a>
+                            <a href="#" class="flex flex-col items-center p-2 rounded-lg hover:bg-white/90"><div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"></path><path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"></path></svg></div><span class="text-xs mt-2 font-medium">Diskusi</span></a>
+                            <a href="#" class="flex flex-col items-center p-2 rounded-lg hover:bg-white/90"><div class="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h.01a1 1 0 100-2H10zm3 0a1 1 0 000 2h.01a1 1 0 100-2H13z" clip-rule="evenodd"></path></svg></div><span class="text-xs mt-2 font-medium">Sertifikat</span></a>
+                        </div>
+                        <div class="mb-8"><h2 class="text-xl font-bold mb-4">Kreator Terbaik</h2><div class="space-y-3"><div class="bg-white/70 backdrop-blur-sm p-3 rounded-xl shadow-sm flex items-center gap-4"><img src="https://placehold.co/48x48/E2E8F0/4A5568?text=I" class="w-12 h-12 rounded-full object-cover"><div><h3 class="font-semibold">Ibu Indah</h3><p class="text-sm text-gray-600">Spesialis Keamanan Digital</p></div></div><div class="bg-white/70 backdrop-blur-sm p-3 rounded-xl shadow-sm flex items-center gap-4"><img src="https://placehold.co/48x48/E2E8F0/4A5568?text=E" class="w-12 h-12 rounded-full object-cover"><div><h3 class="font-semibold">Bapak Eko</h3><p class="text-sm text-gray-600">Pakar Budaya Digital</p></div></div><div class="bg-white/70 backdrop-blur-sm p-3 rounded-xl shadow-sm flex items-center gap-4"><img src="https://placehold.co/48x48/E2E8F0/4A5568?text=S" class="w-12 h-12 rounded-full object-cover"><div><h3 class="font-semibold">Kak Siti</h3><p class="text-sm text-gray-600">Ahli Etika Bermedia</p></div></div></div></div>
+                        <div><div class="flex justify-between items-center mb-4"><h2 class="text-xl font-bold">Lanjutkan Belajar</h2><p class="text-sm text-gray-600">Trainer: <span id="trainer-name" class="font-semibold text-blue-600"></span></p></div><div id="works-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div></div>
+                    </div>
+                    <div id="page-feed" class="page-content"><header class="mb-6"><h1 class="text-2xl font-bold">Feed Publik</h1></header><div class="space-y-4"><div class="bg-white/70 rounded-xl shadow-md p-4"><div class="flex items-center mb-3"><img src="https://placehold.co/40x40/E2E8F0/4A5568?text=A" class="w-10 h-10 rounded-full mr-3"><div class="flex-grow"><div class="font-semibold">Andini</div><div class="text-xs text-gray-500">2 jam lalu</div></div></div><p class="mb-3 text-gray-700">Tugas pertamaku tentang Etika Digital! Belajar banyak soal jejak digital.</p><img src="https://placehold.co/600x400/10B981/FFFFFF?text=Submission" class="rounded-lg w-full object-cover"><div class="flex justify-between items-center mt-3 text-gray-500"><div class="flex space-x-4"><button class="flex items-center gap-1">❤️ 12 Suka</button><button class="flex items-center gap-1">💬 3 Komentar</button></div><button>Bagikan</button></div></div><div class="bg-white/70 rounded-xl shadow-md p-4"><div class="flex items-center mb-3"><img src="https://placehold.co/40x40/E2E8F0/4A5568?text=R" class="w-10 h-10 rounded-full mr-3"><div class="flex-grow"><div class="font-semibold">Rizky</div><div class="text-xs text-gray-500">5 jam lalu</div></div></div><p class="mb-3 text-gray-700">Mengamankan akun sosial media itu penting. Ini rangkuman dari materi Keamanan Digital.</p><img src="https://placehold.co/600x400/06B6D4/FFFFFF?text=Project" class="rounded-lg w-full object-cover"><div class="flex justify-between items-center mt-3 text-gray-500"><div class="flex space-x-4"><button class="flex items-center gap-1">❤️ 25 Suka</button><button class="flex items-center gap-1">💬 8 Komentar</button></div><button>Bagikan</button></div></div></div></div>
+                    <div id="page-learning-center" class="page-content"><header class="mb-6"><h1 class="text-2xl font-bold">Pusat Belajar</h1></header><div id="blueprint-explorer" class="bg-white/70 p-4 rounded-xl shadow-md"><nav class="flex justify-around border-b border-gray-200 mb-6 text-sm"><button data-target="overview" class="blueprint-nav-btn active font-semibold py-3 px-4">Umum</button><button data-target="architecture" class="blueprint-nav-btn font-semibold py-3 px-4">Arsitektur</button><button data-target="userflow" class="blueprint-nav-btn font-semibold py-3 px-4">Alur</button><button data-target="security" class="blueprint-nav-btn font-semibold py-3 px-4">Keamanan</button></nav><main id="blueprint-content-container"></main></div></div>
+                    <div id="page-point" class="page-content"><header class="mb-6"><h1 class="text-2xl font-bold">Poin & Peringkat</h1></header><div class="bg-white/70 rounded-xl shadow-md p-6 text-center mb-6"><p class="text-sm text-gray-600">Total Poin Anda</p><p class="text-4xl font-bold text-blue-600">1,250</p></div><div class="mb-6"><h2 class="text-xl font-bold mb-4">Papan Peringkat</h2><div class="space-y-3"><div class="bg-white/70 p-3 rounded-xl flex items-center gap-4"><span>🥇</span><img src="https://placehold.co/40x40/E2E8F0/4A5568?text=A" class="w-10 h-10 rounded-full"><div class="flex-grow font-semibold">Andini</div><div class="font-bold">2,100 Poin</div></div><div class="bg-white/70 p-3 rounded-xl flex items-center gap-4"><span>🥈</span><img src="https://placehold.co/40x40/E2E8F0/4A5568?text=R" class="w-10 h-10 rounded-full"><div class="flex-grow font-semibold">Rizky</div><div class="font-bold">1,850 Poin</div></div><div class="bg-white/70 p-3 rounded-xl flex items-center gap-4"><span>🥉</span><img src="https://placehold.co/40x40/E2E8F0/4A5568?text=B" class="w-10 h-10 rounded-full"><div class="flex-grow font-semibold">Budi</div><div class="font-bold">1,250 Poin</div></div></div></div><div><h2 class="text-xl font-bold mb-4">Riwayat Poin</h2><ul class="space-y-2 text-sm"><li class="bg-white/70 p-3 rounded-xl flex justify-between"><span>Menyelesaikan Asesmen Keamanan</span><span class="font-semibold text-green-600">+50</span></li><li class="bg-white/70 p-3 rounded-xl flex justify-between"><span>Menyelesaikan Bab Etika</span><span class="font-semibold text-green-600">+25</span></li></ul></div></div>
+                    <div id="page-setting" class="page-content"><header class="mb-6"><h1 class="text-2xl font-bold">Profil & Pengaturan</h1></header><div class="bg-white/70 rounded-xl shadow-md p-6"><div class="flex flex-col items-center mb-6"><img src="https://placehold.co/96x96/E2E8F0/4A5568?text=B" class="w-24 h-24 rounded-full mb-4"><h2 id="profile-name" class="text-2xl font-bold"></h2><p id="profile-email" class="text-gray-600"></p></div><div class="space-y-2"><a href="#" class="flex items-center justify-between p-4 bg-white rounded-lg hover:bg-gray-50"><span>Edit Profil</span><span>></span></a><a href="#" class="flex items-center justify-between p-4 bg-white rounded-lg hover:bg-gray-50"><span>Notifikasi</span><span>></span></a><a href="#" class="flex items-center justify-between p-4 bg-white rounded-lg hover:bg-gray-50"><span>Privasi & Keamanan</span><span>></span></a><a href="#" class="flex items-center justify-between p-4 bg-white rounded-lg hover:bg-gray-50"><span>Pusat Bantuan</span><span>></span></a><button id="logout-btn-setting" class="w-full text-left p-4 bg-white rounded-lg text-red-500 font-semibold hover:bg-gray-50">Keluar</button></div></div></div>
+                `;
+                bottomNavContainer.innerHTML = `
+                    <button data-target="page-home" class="nav-item active flex flex-col items-center"><svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg><span class="text-xs font-medium">Home</span></button>
+                    <button data-target="page-feed" class="nav-item flex flex-col items-center"><svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg><span class="text-xs font-medium">Feed</span></button>
+                    <button data-target="page-learning-center" class="nav-item flex flex-col items-center"><svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 16c1.255 0 2.443-.29 3.5-.804V4.804zM14.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 0114.5 16c1.255 0 2.443-.29 3.5-.804v-10A7.968 7.968 0 0014.5 4z"></path></svg><span class="text-xs font-medium">Belajar</span></button>
+                    <button data-target="page-point" class="nav-item flex flex-col items-center"><svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 2a1 1 0 00-1 1v1H3a1 1 0 00-1 1v1a1 1 0 001 1h1v1a1 1 0 001 1h12a1 1 0 001-1V6a1 1 0 00-1-1h-1V4a1 1 0 00-1-1H5zM3 13v1a1 1 0 001 1h12a1 1 0 001-1v-1H3z" clip-rule="evenodd"></path></svg><span class="text-xs font-medium">Poin</span></button>
+                    <button data-target="page-setting" class="nav-item flex flex-col items-center"><svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01-.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path></svg><span class="text-xs font-medium">Setting</span></button>
+                `;
+                
+                const blueprintContainer = document.getElementById('blueprint-content-container');
+                if (blueprintContainer) {
+                    blueprintContainer.innerHTML = `
+                        <section id="overview" class="content-section active">
+                            <div class="text-center mb-6"><h2 class="text-xl font-bold">Struktur Peran Pengguna</h2><p class="text-gray-600 mt-1 text-sm">Klik setiap peran untuk melihat detailnya.</p></div>
+                            <div class="space-y-4">
+                                <div class="role-card bg-white p-4 rounded-xl shadow-sm cursor-pointer"><h3 class="font-bold flex items-center">👑 Admin</h3><div class="role-details text-sm space-y-2 text-gray-700 mt-2 pl-4">Mengelola semua data, pengguna, dan konten.</div></div>
+                                <div class="role-card bg-white p-4 rounded-xl shadow-sm cursor-pointer"><h3 class="font-bold flex items-center">👩‍🏫 Trainer</h3><div class="role-details text-sm space-y-2 text-gray-700 mt-2 pl-4">Membuat materi dan melihat progress learner.</div></div>
+                                <div class="role-card bg-white p-4 rounded-xl shadow-sm cursor-pointer"><h3 class="font-bold flex items-center">🎓 Learner</h3><div class="role-details text-sm space-y-2 text-gray-700 mt-2 pl-4">Mengakses materi dan menyimpan progress.</div></div>
+                            </div>
+                        </section>
+                        <section id="architecture" class="content-section" style="display:none;"><div class="text-center mb-6"><h2 class="text-xl font-bold">Struktur Data Firestore</h2></div><div class="bg-white p-4 rounded-xl shadow-sm text-sm space-y-2"><div class="db-collection p-2 rounded-lg border">...</div></div></section>
+                        <section id="userflow" class="content-section" style="display:none;"><div class="text-center mb-6"><h2 class="text-xl font-bold">Alur Pengguna Utama</h2></div><div class="space-y-6">...</div></section>
+                        <section id="security" class="content-section" style="display:none;"><div class="text-center mb-6"><h2 class="text-xl font-bold">Aturan Keamanan</h2></div><div class="bg-white rounded-xl shadow-sm overflow-hidden">...</div></section>
+                    `;
+                }
+            }
+
+            function populateDashboard() {
+                const usernameInput = document.getElementById('username');
+                const username = usernameInput.value || "Budi";
+                document.getElementById('welcome-message').textContent = `Selamat datang, ${username}!`;
+                document.getElementById('trainer-name').textContent = mockData.trainers[0].name;
+                document.getElementById('profile-name').textContent = username;
+                document.getElementById('profile-email').textContent = `${username.toLowerCase().replace(/\s/g, '.')}@email.com`;
+                
+                const worksListEl = document.getElementById('works-list');
+                worksListEl.innerHTML = '';
+                mockData.works.forEach(work => {
+                    const workCard = document.createElement('div');
+                    workCard.className = "bg-white p-4 rounded-lg border border-gray-200 flex flex-col";
+                    workCard.innerHTML = `
+                        <div class="flex-grow"><h3 class="font-bold">${work.title}</h3><p class="text-gray-600 mt-1 text-sm">${work.description}</p><div class="summary-container mt-2 text-xs text-gray-700 bg-blue-50 border-l-4 border-blue-400 p-2 rounded hidden"></div></div>
+                        <div class="mt-4 flex gap-2"><button data-work-id="${work.id}" class="start-learning-btn w-full text-xs bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">Mulai Belajar</button><button data-work-id="${work.id}" class="summarize-btn w-full text-xs bg-gray-200 text-gray-700 py-2 rounded-md hover:bg-gray-300 flex items-center justify-center gap-1">✨ Ringkas</button></div>`;
+                    worksListEl.appendChild(workCard);
+                });
+            }
+
+            function startCarousel() {
+                let currentSlide = 0;
+                const slides = document.querySelectorAll('#home-carousel .carousel-slide');
+                const totalSlides = slides.length;
+                if (totalSlides === 0) return;
+
+                const showNextSlide = () => {
+                    slides[currentSlide].classList.remove('opacity-100');
+                    slides[currentSlide].classList.add('opacity-0');
+                    currentSlide = (currentSlide + 1) % totalSlides;
+                    slides[currentSlide].classList.remove('opacity-0');
+                    slides[currentSlide].classList.add('opacity-100');
+                };
+                setInterval(showNextSlide, 4000);
+            }
+
+            async function openCourseDetail(workId) {
+                const work = mockData.works.find(w => w.id === workId);
+                if (!work) return;
+
+                courseTitleEl.textContent = work.title;
+                chapterListEl.innerHTML = `<div class="flex justify-center p-8"><div class="loader"></div></div>`;
+                courseDetailView.classList.remove('hidden');
+
+                if (work.chapters.length === 0) {
+                    const prompt = `Buatkan daftar 10 judul bab yang spesifik dan berurutan untuk kursus tentang "${work.title}". Berikan hanya daftar judul, satu judul per baris.`;
+                    const titlesResponse = await callGeminiAPI(prompt);
+                    work.chapters = titlesResponse.split('\n').filter(t => t).map((title, i) => ({ id: `c${i}`, title: title.replace(/^\d+\.\s*/, '') }));
+                }
+
+                chapterListEl.innerHTML = '';
+                work.chapters.forEach(chapter => {
+                    const chapterItem = document.createElement('div');
+                    chapterItem.className = 'chapter-item border border-gray-200 rounded-lg overflow-hidden';
+                    chapterItem.innerHTML = `
+                        <button class="chapter-header w-full text-left p-4 bg-gray-50 hover:bg-gray-100 flex justify-between items-center"><span class="font-semibold text-gray-800">${chapter.title}</span><span class="chapter-arrow text-gray-500 text-xl">▼</span></button>
+                        <div class="chapter-content bg-white p-4 border-t"><h4 class="font-semibold mb-3">Video Pembelajaran:</h4><div class="aspect-w-16 aspect-h-9 mb-4"><iframe src="https://www.youtube.com/embed/${work.videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-48 rounded-md"></iframe></div><h4 class="font-semibold mb-3">Materi PDF:</h4><div class="mb-4"><iframe src="${work.pdfUrl}" class="w-full h-48 rounded-md border"></iframe></div><button data-course-title="${work.title}" data-chapter-title="${chapter.title}" class="w-full sm:w-auto px-4 py-2 text-sm bg-green-500 text-white rounded-md hover:bg-green-600 assessment-btn">Kerjakan Asesmen</button></div>`;
+                    chapterListEl.appendChild(chapterItem);
+                });
+            }
+            
+            async function showAssessment(courseTitle, chapterTitle) {
+                assessmentModal.classList.remove('hidden');
+                document.getElementById('assessment-content').innerHTML = `<div class="flex justify-center p-8"><div class="loader"></div></div>`;
+                const prompt = `Buatkan 1 pertanyaan asesmen pilihan ganda (A, B, C, D) tentang topik "${chapterTitle}" dalam konteks "${courseTitle}". Format respons harus seperti ini:\nPertanyaan: [Isi pertanyaan]\nA. [Pilihan A]\nB. [Pilihan B]\nC. [Pilihan C]\nD. [Pilihan D]\nKunci Jawaban: [Huruf Jawaban]`;
+                const response = await callGeminiAPI(prompt);
+                const lines = response.split('\n').filter(l => l);
+                const question = lines.find(l => l.startsWith("Pertanyaan:")).replace("Pertanyaan: ", "");
+                const options = lines.filter(l => /^[A-D]\./.test(l));
+                const answerKey = lines.find(l => l.startsWith("Kunci Jawaban:")).replace("Kunci Jawaban: ", "").trim();
+                let optionsHtml = options.map(opt => `<label class="block border rounded-lg p-3 my-2 cursor-pointer assessment-option hover:bg-gray-100"><input type="radio" name="assessment" value="${opt.substring(0, 1)}" class="mr-3">${opt.substring(3)}</label>`).join('');
+                document.getElementById('assessment-content').innerHTML = `<h3 class="text-lg font-bold mb-4">Asesmen: ${chapterTitle}</h3><p class="mb-4">${question}</p><div id="assessment-options">${optionsHtml}</div><div id="assessment-result" class="mt-4 text-sm font-semibold"></div><div class="flex justify-end gap-2 mt-4"><button id="close-assessment-btn" class="px-4 py-2 text-sm bg-gray-200 rounded-md">Tutup</button><button id="submit-assessment-btn" data-answer="${answerKey}" class="px-4 py-2 text-sm bg-blue-600 text-white rounded-md">Kirim</button></div>`;
+            }
+
+            function setupBlueprintInteractions() {
+                 const blueprintExplorer = document.getElementById('blueprint-explorer');
+                 if(!blueprintExplorer) return;
+
+                blueprintExplorer.addEventListener('click', (e) => {
+                    const navBtn = e.target.closest('.blueprint-nav-btn');
+                    const roleCard = e.target.closest('.role-card');
+                    
+                    if(navBtn) {
+                        blueprintExplorer.querySelectorAll('.blueprint-nav-btn').forEach(b => b.classList.remove('active'));
+                        navBtn.classList.add('active');
+                        blueprintExplorer.querySelectorAll('.content-section').forEach(c => {
+                             c.style.display = c.id === navBtn.dataset.target ? 'block' : 'none';
+                        });
+                    }
+                    if(roleCard) {
+                        roleCard.classList.toggle('expanded');
+                    }
+                });
+            }
+
+            // Initial Setup
+            renderAppShell();
+            const pageContents = document.querySelectorAll('.page-content');
+            
+            // Event Listeners
+            loginBtn.addEventListener('click', () => {
+                loginView.classList.add('hidden');
+                dashboardView.classList.remove('hidden');
+                populateDashboard();
+                startCarousel();
+                setupBlueprintInteractions();
+            });
+            closeCourseBtn.addEventListener('click', () => courseDetailView.classList.add('hidden'));
+
+            dashboardView.addEventListener('click', async (e) => {
+                const target = e.target.closest('button');
+                if (!target) return;
+                
+                const handleLogout = () => {
+                    dashboardView.classList.add('hidden');
+                    loginView.classList.remove('hidden');
+                };
+
+                if(target.id === 'logout-btn-home' || target.id === 'logout-btn-setting') { handleLogout(); }
+                if(target.id === 'generate-plan-btn') { /* ... generate plan logic ... */ }
+                if(target.classList.contains('start-learning-btn')) { openCourseDetail(target.dataset.workId); }
+                if(target.classList.contains('summarize-btn')) { /* ... summarize logic ... */ }
+                if(target.classList.contains('nav-item')) {
+                     bottomNavContainer.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+                     target.classList.add('active');
+                     pageContents.forEach(page => page.classList.toggle('active', page.id === target.dataset.target));
+                }
+            });
+
+            courseDetailView.addEventListener('click', async (e) => {
+                const assessmentButton = e.target.closest('.assessment-btn');
+                const chapterHeader = e.target.closest('.chapter-header');
+
+                if (assessmentButton) {
+                    showAssessment(assessmentButton.dataset.courseTitle, assessmentButton.dataset.chapterTitle);
+                }
+                if (chapterHeader) {
+                    chapterHeader.parentElement.classList.toggle('open');
+                }
+            });
+            
+            assessmentModal.addEventListener('click', (e) => {
+                const target = e.target;
+                if(target.id === 'close-assessment-btn' || !target.closest('#assessment-content')) { assessmentModal.classList.add('hidden'); }
+                if(target.id === 'submit-assessment-btn') {
+                    const selected = document.querySelector('input[name="assessment"]:checked');
+                    const resultEl = document.getElementById('assessment-result');
+                    if (selected) {
+                        const isCorrect = selected.value === target.dataset.answer;
+                        resultEl.textContent = isCorrect ? "Jawaban Anda Benar! 🎉" : `Jawaban Salah. Jawaban yang benar adalah ${target.dataset.answer}.`;
+                        resultEl.className = isCorrect ? 'mt-4 text-sm font-semibold text-green-600' : 'mt-4 text-sm font-semibold text-red-600';
+                        target.disabled = true;
+                    } else {
+                        resultEl.textContent = "Silakan pilih salah satu jawaban.";
+                        resultEl.className = 'mt-4 text-sm font-semibold text-yellow-600';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
