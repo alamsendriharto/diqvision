@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Manajemen - Karya Digital ID</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Neutrals -->
+    <!-- Application Structure Plan: Saya merancang aplikasi ini sebagai dasbor satu halaman (single-page) dengan navigasi atas yang melompat ke bagian-bagian relevan. Struktur ini dipilih untuk kemudahan penggunaan, memungkinkan admin melihat gambaran umum (KPI), lalu menggali lebih dalam ke demografi, kinerja kelas, dan dampak dengan menggulir ke bawah. Tata letak berbasis grid dan flexbox memastikan informasi tersaji secara logis dan mudah dicerna di semua ukuran layar, dari desktop hingga mobile. Alur pengguna adalah dari ringkasan tingkat tinggi ke analisis yang lebih rinci. -->
+    <!-- Visualization & Content Choices: 1. KPI: Disajikan sebagai kartu statis untuk visibilitas tinggi. 2. Latar Belakang & Geografis: Laporan asli menggunakan daftar, saya memilih bagan Donat (Doughnut Chart) dari Chart.js karena lebih visual dan interaktif untuk menunjukkan proporsi. 3. Kelas Populer: Daftar teks diubah menjadi Bagan Batang Horizontal (Horizontal Bar Chart) untuk perbandingan kuantitatif yang lebih cepat dan jelas. 4. Perkembangan Kompetensi: Teks yang menggambarkan corong (funnel) divisualisasikan sebagai Bagan Batang Vertikal (Vertical Bar Chart) untuk menunjukkan penurunan peserta di setiap tahap secara dramatis dan mudah dipahami. Semua visualisasi menggunakan Canvas melalui Chart.js, tanpa SVG. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-10 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <h1 class="text-xl md:text-2xl font-bold text-slate-900">📊 Dashboard Karya Digital ID</h1>
+                <nav class="hidden md:flex space-x-6 text-sm font-medium">
+                    <a href="#kpi" class="text-slate-600 hover:text-blue-600 transition">Ringkasan</a>
+                    <a href="#demografi" class="text-slate-600 hover:text-blue-600 transition">Demografi</a>
+                    <a href="#kinerja" class="text-slate-600 hover:text-blue-600 transition">Kinerja</a>
+                    <a href="#dampak" class="text-slate-600 hover:text-blue-600 transition">Dampak</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <div class="flex justify-between items-baseline mb-6">
+            <h2 class="text-lg font-semibold text-slate-900">Selamat Datang, Admin!</h2>
+            <p id="current-date" class="text-sm text-slate-500"></p>
+        </div>
+
+        <section id="kpi" class="mb-8">
+            <h3 class="text-xl font-bold text-slate-900 mb-4">KPI Utama (Indikator Kinerja Kunci)</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-sm font-medium text-slate-500 mb-2">👥 Peserta Terdaftar</h4>
+                    <p class="text-4xl font-bold text-slate-900">50.281</p>
+                    <p class="text-sm text-green-600 font-medium mt-1">▲ 1.200 bulan ini</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-sm font-medium text-slate-500 mb-2">👨‍💻 Peserta Aktif</h4>
+                    <p class="text-4xl font-bold text-slate-900">12.590</p>
+                    <p class="text-sm text-slate-500 mt-1">(Aktif dalam 30 hari terakhir)</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-sm font-medium text-slate-500 mb-2">📚 Kelas Tersedia</h4>
+                    <p class="text-4xl font-bold text-slate-900">45</p>
+                    <p class="text-sm text-blue-600 font-medium mt-1">+ 3 kelas baru bulan ini</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-sm font-medium text-slate-500 mb-2">✅ Tingkat Penyelesaian</h4>
+                    <p class="text-4xl font-bold text-slate-900">68%</p>
+                    <p class="text-sm text-green-600 font-medium mt-1">(Rata-rata semua kelas)</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="demografi" class="mb-8">
+            <h3 class="text-xl font-bold text-slate-900 mb-4">Analisis Demografi Peserta</h3>
+            <p class="text-slate-600 mb-6 max-w-2xl">Memahami siapa audiens Anda adalah kunci untuk merancang konten yang lebih relevan dan efektif. Bagian ini memvisualisasikan distribusi peserta berdasarkan latar belakang dan lokasi geografis.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-900 mb-2">Latar Belakang Peserta</h4>
+                    <p class="text-sm text-slate-500 mb-4">Distribusi peserta berdasarkan latar belakang pekerjaan atau status mereka.</p>
+                    <div class="chart-container">
+                        <canvas id="backgroundChart"></canvas>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-4 text-center"><b>Insight:</b> Mayoritas peserta adalah pelaku UMKM. Ini adalah peluang besar untuk mengembangkan kelas lanjutan tentang e-commerce dan iklan digital.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-900 mb-2">Sebaran Geografis</h4>
+                    <p class="text-sm text-slate-500 mb-4">Asal wilayah peserta yang mendaftar di platform Karya Digital ID.</p>
+                    <div class="chart-container">
+                        <canvas id="geoChart"></canvas>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-4 text-center"><b>Insight:</b> Perlu ada strategi pemasaran khusus untuk meningkatkan jangkauan di luar Pulau Jawa dan menjangkau audiens yang lebih luas.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="kinerja" class="mb-8">
+            <h3 class="text-xl font-bold text-slate-900 mb-4">Kinerja Kelas & Alur Belajar</h3>
+             <p class="text-slate-600 mb-6 max-w-2xl">Analisis ini membantu mengidentifikasi kelas mana yang paling diminati dan bagaimana peserta menggabungkan beberapa kelas untuk membangun keahlian mereka.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 lg:col-span-3">
+                    <h4 class="text-lg font-semibold text-slate-900 mb-2">5 Kelas Paling Populer</h4>
+                     <p class="text-sm text-slate-500 mb-4">Berdasarkan jumlah pendaftar unik.</p>
+                    <div class="relative w-full h-[350px] md:h-[400px]">
+                        <canvas id="popularClassesChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 lg:col-span-2">
+                    <h4 class="text-lg font-semibold text-slate-900 mb-4">Alur Belajar Populer</h4>
+                    <p class="text-sm text-slate-500 mb-6">Kombinasi kelas yang sering diambil secara berurutan oleh peserta untuk membangun jalur karier.</p>
+                    <div class="space-y-5">
+                        <div>
+                            <p class="font-semibold text-slate-800">🚀 Digital Marketer</p>
+                            <p class="text-sm text-slate-500">Canva → Manajemen Medsos → SEO</p>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-slate-800">🎨 Content Creator</p>
+                            <p class="text-sm text-slate-500">Content Writer → Editing Video → Canva</p>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-slate-800">🛒 Online Seller</p>
+                            <p class="text-sm text-slate-500">Toko Online → Manajemen Medsos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="dampak" class="mb-8">
+            <h3 class="text-xl font-bold text-slate-900 mb-4">Dampak & Hasil Karya Peserta</h3>
+            <p class="text-slate-600 mb-6 max-w-2xl">Metrik ini mengukur tujuan utama platform: mengubah pembelajaran menjadi literasi dan kemampuan berkarya yang nyata.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 lg:col-span-3">
+                     <h4 class="text-lg font-semibold text-slate-900 mb-2">Perkembangan Kompetensi Peserta</h4>
+                     <p class="text-sm text-slate-500 mb-4">Bagaimana tingkat keahlian peserta berubah setelah mengikuti alur belajar.</p>
+                     <div class="relative w-full h-[350px] md:h-[400px]">
+                        <canvas id="competencyChart"></canvas>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-4 text-center"><b>Insight:</b> Ada penurunan besar dari Terdaftar ke Pemula. Mungkin proses onboarding perlu disederhanakan. Konversi dari Mahir ke Berkarya sudah cukup baik!</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 lg:col-span-2">
+                    <h4 class="text-lg font-semibold text-slate-900 mb-4">Aktivitas Terbaru</h4>
+                    <ul class="space-y-4 text-sm">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3 mt-1">✓</span>
+                            <div><span class="font-semibold">Budi Santoso</span> baru saja menyelesaikan kelas "Manajemen Media Sosial untuk Bisnis".</div>
+                        </li>
+                        <li class="flex items-start">
+                             <span class="text-blue-500 mr-3 mt-1">⭐</span>
+                             <div><span class="font-semibold">Siti Aminah</span> mengunggah karya baru: 'Desain Logo untuk Kopi Senja'.</div>
+                        </li>
+                        <li class="flex items-start">
+                             <span class="text-yellow-500 mr-3 mt-1">▶</span>
+                             <div><span class="font-semibold">150 peserta baru</span> mendaftar di kelas "Dasar Desain Grafis dengan Canva" hari ini.</div>
+                        </li>
+                         <li class="flex items-start">
+                             <span class="text-purple-500 mr-3 mt-1">🏆</span>
+                             <div><span class="font-semibold">Eka Wijaya</span> baru saja mendapatkan sertifikat 'Spesialis Konten Digital'.</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-8 text-sm text-slate-500 border-t mt-8">
+        <p>&copy; 2025 Karya Digital ID. Diberdayakan untuk talenta digital Indonesia.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            document.getElementById('current-date').textContent = new Date().toLocaleDateString('id-ID', {
+                day: 'numeric', month: 'long', year: 'numeric'
+            });
+
+            const defaultFont = {
+                family: 'Inter',
+                size: 12,
+            };
+            Chart.defaults.font.family = defaultFont.family;
+            Chart.defaults.font.size = defaultFont.size;
+            Chart.defaults.color = '#64748b';
+
+            const backgroundChartData = {
+                labels: ['Pelaku UMKM', 'Pelajar/Mahasiswa', 'Pencari Kerja', 'Profesional', 'Umum'],
+                datasets: [{
+                    label: 'Latar Belakang Peserta',
+                    data: [35, 30, 20, 10, 5],
+                    backgroundColor: ['#3498db', '#e67e22', '#2ecc71', '#9b59b6', '#bdc3c7'],
+                    borderColor: '#f8fafc',
+                    borderWidth: 2,
+                    hoverOffset: 4
+                }]
+            };
+
+            const backgroundChartCtx = document.getElementById('backgroundChart').getContext('2d');
+            new Chart(backgroundChartCtx, {
+                type: 'doughnut',
+                data: backgroundChartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+
+            const geoChartData = {
+                labels: ['Jawa', 'Sumatera', 'Kalimantan', 'Sulawesi', 'Lainnya'],
+                datasets: [{
+                    label: 'Sebaran Geografis',
+                    data: [55, 20, 10, 8, 7],
+                    backgroundColor: ['#3498db', '#e67e22', '#2ecc71', '#9b59b6', '#bdc3c7'],
+                    borderColor: '#f8fafc',
+                    borderWidth: 2,
+                    hoverOffset: 4
+                }]
+            };
+
+            const geoChartCtx = document.getElementById('geoChart').getContext('2d');
+            new Chart(geoChartCtx, {
+                type: 'doughnut',
+                data: geoChartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+
+            const popularClassesData = {
+                labels: [
+                    'Dasar Desain Grafis dengan Canva',
+                    'Menjadi Content Writer & Ahli SEO',
+                    'Manajemen Media Sosial untuk Bisnis',
+                    'Dasar Editing Video dengan CapCut',
+                    'Membangun Toko Online Pertama'
+                ],
+                datasets: [{
+                    label: 'Jumlah Peserta',
+                    data: [15400, 12800, 11250, 9800, 8500],
+                    backgroundColor: 'rgba(52, 152, 219, 0.8)',
+                    borderColor: 'rgba(41, 128, 185, 1)',
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            };
+            
+            const popularClassesCtx = document.getElementById('popularClassesChart').getContext('2d');
+            new Chart(popularClassesCtx, {
+                type: 'bar',
+                data: popularClassesData,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.dataset.label}: ${context.raw.toLocaleString('id-ID')}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                display: true,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    if (value >= 1000) {
+                                        return (value / 1000) + 'k';
+                                    }
+                                    return value;
+                                }
+                            }
+                        },
+                        y: {
+                           grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            const competencyData = {
+                labels: ['Terdaftar', 'Level Pemula', 'Level Terampil', 'Level Mahir', 'Berkarya'],
+                datasets: [{
+                    label: 'Jumlah Peserta',
+                    data: [50281, 28150, 11260, 4500, 1800],
+                    backgroundColor: [
+                        'rgba(189, 195, 199, 0.7)',
+                        'rgba(52, 152, 219, 0.7)',
+                        'rgba(46, 204, 113, 0.7)',
+                        'rgba(155, 89, 182, 0.7)',
+                        'rgba(230, 126, 34, 0.7)'
+                    ],
+                    borderColor: [
+                         '#95a5a6',
+                         '#2980b9',
+                         '#27ae60',
+                         '#8e44ad',
+                         '#d35400'
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            };
+
+            const competencyCtx = document.getElementById('competencyChart').getContext('2d');
+            new Chart(competencyCtx, {
+                type: 'bar',
+                data: competencyData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    return ` ${context.dataset.label}: ${context.raw.toLocaleString('id-ID')}`;
+                                }
+                            }
+                        }
+                    },
+                     scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: true,
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                           grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
