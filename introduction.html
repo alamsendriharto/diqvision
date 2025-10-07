@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cakrawala - Cerdas & Kreatif di Dunia Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .animated-gradient-purple {
+            background: linear-gradient(-45deg, #a855f7, #6d28d9, #8b5cf6, #d946ef);
+            background-size: 400% 400%;
+            animation: gradient-flow 15s ease infinite;
+        }
+
+        .animated-gradient-text {
+            background: linear-gradient(-45deg, #f9a8d4, #a78bfa, #f472b6, #c084fc);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-flow 8s ease infinite;
+        }
+
+        .pulsing-button {
+            animation: pulse-animation 2s infinite;
+        }
+        
+        .shaking-button {
+            animation: shake-animation 4s infinite;
+            animation-delay: 1s;
+        }
+
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes pulse-animation {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+        
+        @keyframes shake-animation {
+            0% { transform: translateX(0) }
+            5%, 15% { transform: translateX(-2px) }
+            10%, 20% { transform: translateX(2px) }
+            25% { transform: translateX(0) }
+            100% { transform: translateX(0) }
+        }
+
+        /* Styling untuk filter galeri aktif */
+        .filter-btn.active {
+            background-color: #6d28d9;
+            color: white;
+        }
+
+        /* Styling untuk typewriter effect */
+        #typewriter-text-container {
+            display: inline;
+        }
+        .blinking-cursor {
+            font-weight: 600;
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            from, to { color: transparent }
+            50% { color: inherit }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="animated-gradient-purple py-20 md:py-32 text-white">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight animated-gradient-text">
+                    Cerdas di Dunia Maya,<br>Kreatif di Dunia Nyata
+                </h1>
+                <p id="typewriter-container" class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-purple-200 h-24">
+                    <span id="typewriter-text-container"></span><span class="blinking-cursor">|</span>
+                </p>
+                <div class="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <a href="https://sikarya.mageti.biz.id/login" class="pulsing-button inline-block w-full sm:w-auto px-8 py-4 bg-white text-purple-600 font-bold rounded-lg shadow-lg hover:bg-gray-100 transition-all transform hover:scale-105">
+                        Mulai Belajar
+                    </a>
+                    <a href="https://sikarya.mageti.biz.id/galeri_karya" class="shaking-button inline-block w-full sm:w-auto px-8 py-4 bg-purple-500/50 backdrop-blur-sm text-white font-semibold rounded-lg hover:bg-purple-500/80 transition-all transform hover:scale-105">
+                        Lihat Karya &rarr;
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian Literasi Digital -->
+        <section id="literasi" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900">4 Pilar Literasi Digital</h2>
+                    <p class="mt-2 text-gray-600">Landasan utama untuk menjadi warga digital yang cakap, berbudaya, etis, dan aman.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Kartu Pilar 1: Kecakapan Digital -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden group transform hover:-translate-y-2 transition-transform duration-300">
+                        <img src="https://placehold.co/600x400/6d28d9/ffffff?text=Cakap" alt="Kecakapan Digital" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <span class="text-sm font-semibold text-purple-600">Pilar 1</span>
+                            <h3 class="mt-2 text-xl font-bold">Kecakapan Digital</h3>
+                            <p class="mt-2 text-gray-600 text-sm">Kemampuan individu dalam mengetahui, memahami, dan menggunakan perangkat keras dan lunak TIK.</p>
+                            <a href="#" class="inline-block mt-4 font-semibold text-purple-600 group-hover:underline">Pelajari Selengkapnya &rarr;</a>
+                        </div>
+                    </div>
+                    <!-- Kartu Pilar 2: Budaya Digital -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden group transform hover:-translate-y-2 transition-transform duration-300">
+                        <img src="https://placehold.co/600x400/8b5cf6/ffffff?text=Budaya" alt="Budaya Digital" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <span class="text-sm font-semibold text-purple-600">Pilar 2</span>
+                            <h3 class="mt-2 text-xl font-bold">Budaya Digital</h3>
+                            <p class="mt-2 text-gray-600 text-sm">Membangun wawasan kebangsaan dan nilai-nilai Pancasila dalam perilaku sehari-hari di ruang digital.</p>
+                             <a href="#" class="inline-block mt-4 font-semibold text-purple-600 group-hover:underline">Pelajari Selengkapnya &rarr;</a>
+                        </div>
+                    </div>
+                    <!-- Kartu Pilar 3: Etika Digital -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden group transform hover:-translate-y-2 transition-transform duration-300">
+                        <img src="https://placehold.co/600x400/a855f7/ffffff?text=Etika" alt="Etika Digital" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <span class="text-sm font-semibold text-purple-600">Pilar 3</span>
+                            <h3 class="mt-2 text-xl font-bold">Etika Digital</h3>
+                            <p class="mt-2 text-gray-600 text-sm">Menyesuaikan diri, berpikir rasional, dan mengutamakan etika (netiket) saat berinteraksi di dunia maya.</p>
+                            <a href="#" class="inline-block mt-4 font-semibold text-purple-600 group-hover:underline">Pelajari Selengkapnya &rarr;</a>
+                        </div>
+                    </div>
+                    <!-- Kartu Pilar 4: Keamanan Digital -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden group transform hover:-translate-y-2 transition-transform duration-300">
+                        <img src="https://placehold.co/600x400/d946ef/ffffff?text=Aman" alt="Keamanan Digital" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <span class="text-sm font-semibold text-purple-600">Pilar 4</span>
+                            <h3 class="mt-2 text-xl font-bold">Keamanan Digital</h3>
+                            <p class="mt-2 text-gray-600 text-sm">Meningkatkan kesadaran perlindungan data pribadi dan keamanan digital dalam aktivitas online.</p>
+                            <a href="#" class="inline-block mt-4 font-semibold text-purple-600 group-hover:underline">Pelajari Selengkapnya &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian Galeri Karya -->
+        <section id="karya" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900">Galeri Karya Kreatif</h2>
+                    <p class="mt-2 text-gray-600">Lihat inspirasi dari karya-karya terbaik para pengguna.</p>
+                </div>
+                <!-- Filter -->
+                <div id="filter-container" class="flex flex-wrap justify-center gap-2 mb-8">
+                    <button class="filter-btn active px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded-full hover:bg-gray-300 transition" data-filter="semua">Semua</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded-full hover:bg-gray-300 transition" data-filter="desain">Desain Grafis</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded-full hover:bg-gray-300 transition" data-filter="tulisan">Tulisan</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded-full hover:bg-gray-300 transition" data-filter="video">Video</button>
+                </div>
+
+                <!-- Grid Karya -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Karya 1 -->
+                    <div class="gallery-item" data-category="desain">
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden group">
+                            <img src="https://placehold.co/600x400/a78bfa/ffffff?text=Poster" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" alt="Karya Desain">
+                        </div>
+                    </div>
+                    <!-- Karya 2 -->
+                    <div class="gallery-item" data-category="tulisan">
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden group">
+                            <img src="https://placehold.co/600x400/f472b6/ffffff?text=Puisi" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" alt="Karya Tulisan">
+                        </div>
+                    </div>
+                    <!-- Karya 3 -->
+                    <div class="gallery-item" data-category="video">
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden group">
+                           <img src="https://placehold.co/600x400/c084fc/ffffff?text=Animasi" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" alt="Karya Video">
+                        </div>
+                    </div>
+                    <!-- Karya 4 -->
+                    <div class="gallery-item" data-category="desain">
+                       <img src="https://placehold.co/600x400/818cf8/ffffff?text=Ilustrasi" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" alt="Karya Desain">
+                    </div>
+                    <!-- Karya 5 -->
+                    <div class="gallery-item" data-category="tulisan">
+                       <img src="https://placehold.co/600x400/fb7185/ffffff?text=Cerpen" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" alt="Karya Tulisan">
+                    </div>
+                     <!-- Karya 6 -->
+                    <div class="gallery-item" data-category="desain">
+                       <img src="https://placehold.co/600x400/6366f1/ffffff?text=Logo" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" alt="Karya Desain">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="animated-gradient-purple">
+            <div class="container mx-auto px-6 py-20 text-center">
+                <h2 class="text-3xl font-extrabold text-white">Siap Menjadi Bagian dari Perubahan?</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-purple-200">
+                    Bergabunglah dengan ribuan generasi muda lainnya. Daftar sekarang, gratis selamanya.
+                </p>
+                <a href="https://sikarya.mageti.biz.id/register" class="shaking-button mt-8 inline-block px-10 py-4 bg-white text-purple-600 font-bold rounded-lg shadow-lg hover:bg-gray-100 transition-all transform hover:scale-105">
+                    Buat Akun Sekarang
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Logika untuk Filter Galeri Karya
+        const filterContainer = document.getElementById('filter-container');
+        const filterBtns = filterContainer.querySelectorAll('.filter-btn');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+
+                galleryItems.forEach(item => {
+                    if (filter === 'semua' || item.dataset.category === filter) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Logika untuk Typewriter Effect
+        const textContainer = document.getElementById('typewriter-text-container');
+        const textToType = "Jelajahi dunia digital dengan percaya diri dan tunjukkan karyamu kepada dunia. Platform untuk belajar, berkarya, dan berkolaborasi.";
+        let charIndex = 0;
+
+        function typeWriter() {
+            if (charIndex < textToType.length) {
+                textContainer.textContent += textToType.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeWriter, 50); // Kecepatan ketik
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', (event) => {
+            typeWriter();
+        });
+    </script>
+</body>
+</html>
+
