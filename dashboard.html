@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Manajemen - Karya Digital ID</title>
+    <title>Dashboard Diqvision App's</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,12 +40,8 @@
     <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-10 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
-                <h1 class="text-xl md:text-2xl font-bold text-slate-900">📊 Dashboard Karya Digital ID</h1>
+                <h1 class="text-xl md:text-2xl font-bold text-slate-900">📊 Dashboard Diqvision App's</h1>
                 <nav class="hidden md:flex space-x-6 text-sm font-medium">
-                    <a href="#kpi" class="text-slate-600 hover:text-blue-600 transition">Ringkasan</a>
-                    <a href="#demografi" class="text-slate-600 hover:text-blue-600 transition">Demografi</a>
-                    <a href="#kinerja" class="text-slate-600 hover:text-blue-600 transition">Kinerja</a>
-                    <a href="#dampak" class="text-slate-600 hover:text-blue-600 transition">Dampak</a>
                 </nav>
             </div>
         </div>
@@ -63,12 +59,12 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
                     <h4 class="text-sm font-medium text-slate-500 mb-2">👥 Peserta Terdaftar</h4>
-                    <p class="text-4xl font-bold text-slate-900">50.281</p>
-                    <p class="text-sm text-green-600 font-medium mt-1">▲ 1.200 bulan ini</p>
+                    <p class="text-4xl font-bold text-slate-900">250</p>
+                    <p class="text-sm text-green-600 font-medium mt-1">▲ 6 bulan ini</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
                     <h4 class="text-sm font-medium text-slate-500 mb-2">👨‍💻 Peserta Aktif</h4>
-                    <p class="text-4xl font-bold text-slate-900">12.590</p>
+                    <p class="text-4xl font-bold text-slate-900">63</p>
                     <p class="text-sm text-slate-500 mt-1">(Aktif dalam 30 hari terakhir)</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
@@ -80,6 +76,97 @@
                     <h4 class="text-sm font-medium text-slate-500 mb-2">✅ Tingkat Penyelesaian</h4>
                     <p class="text-4xl font-bold text-slate-900">68%</p>
                     <p class="text-sm text-green-600 font-medium mt-1">(Rata-rata semua kelas)</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="analisis-individu" class="mb-8">
+            <h3 class="text-xl font-bold text-slate-900 mb-4">Analisis Keterampilan Individu</h3>
+            <p class="text-slate-600 mb-6 max-w-2xl">Visualisasi kompetensi 4 pilar literasi digital untuk beberapa contoh pengguna. Ini membantu dalam merancang intervensi pembelajaran yang lebih personal.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-900 mb-2">Endah Prokopim</h4>
+                    <p class="text-sm text-slate-500 mb-4">Unggul di Keamanan Digital, namun perlu peningkatan pada Kecakapan Digital.</p>
+                    <div class="chart-container">
+                        <canvas id="endahChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-900 mb-2">Bu Wid Lurah Bulukerto</h4>
+                    <p class="text-sm text-slate-500 mb-4">Sangat cakap digital untuk operasional, namun kesadaran keamanan siber masih rendah.</p>
+                    <div class="chart-container">
+                        <canvas id="widChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-900 mb-2">Fatih SMK Takeran</h4>
+                    <p class="text-sm text-slate-500 mb-4">Memiliki pemahaman yang seimbang dan merata di keempat pilar literasi digital.</p>
+                    <div class="chart-container">
+                        <canvas id="fatihChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-900 mb-2">Aji SMK 2 Magetan</h4>
+                    <p class="text-sm text-slate-500 mb-4">Kecakapan teknis baik, perlu penguatan pada etika dan budaya digital.</p>
+                    <div class="chart-container">
+                        <canvas id="ajiChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-900 mb-2">Fadhil SMK 2 Magetan</h4>
+                    <p class="text-sm text-slate-500 mb-4">Pemahaman keamanan siber sangat tinggi, area lain cukup seimbang.</p>
+                    <div class="chart-container">
+                        <canvas id="fadhilChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-900 mb-2">Nurul SMK 2 Magetan</h4>
+                    <p class="text-sm text-slate-500 mb-4">Sangat menonjol dalam budaya digital dan etika bermedia sosial.</p>
+                    <div class="chart-container">
+                        <canvas id="nurulChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-900 mb-2">Naswa SMK 2 Magetan</h4>
+                    <p class="text-sm text-slate-500 mb-4">Kompetensi merata dengan sedikit keunggulan pada kecakapan digital.</p>
+                    <div class="chart-container">
+                        <canvas id="naswaChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-900 mb-2">Laura SMK 2 Magetan</h4>
+                    <p class="text-sm text-slate-500 mb-4">Pemahaman etika digital yang kuat, cocok untuk peran komunikasi.</p>
+                    <div class="chart-container">
+                        <canvas id="lauraChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-900 mb-2">Caca SMK Takeran</h4>
+                    <p class="text-sm text-slate-500 mb-4">Berbakat dalam aspek budaya dan kreativitas digital.</p>
+                    <div class="chart-container">
+                        <canvas id="cacaChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-900 mb-2">Okta SMK Takeran</h4>
+                    <p class="text-sm text-slate-500 mb-4">Kombinasi kuat antara kecakapan teknis dan keamanan siber.</p>
+                    <div class="chart-container">
+                        <canvas id="oktaChart"></canvas>
+                    </div>
+                </div>
+                 <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-900 mb-2">Pak Didik Lurah Tambran</h4>
+                    <p class="text-sm text-slate-500 mb-4">Kuat dalam etika dan budaya, perlu peningkatan aspek teknis.</p>
+                    <div class="chart-container">
+                        <canvas id="didikChart"></canvas>
+                    </div>
+                </div>
+                 <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h4 class="text-lg font-semibold text-slate-900 mb-2">Nina Mahasiswa ITB</h4>
+                    <p class="text-sm text-slate-500 mb-4">Kecakapan dan keamanan sangat tinggi, mencerminkan latar belakang teknis.</p>
+                    <div class="chart-container">
+                        <canvas id="ninaChart"></canvas>
+                    </div>
                 </div>
             </div>
         </section>
@@ -177,10 +264,6 @@
 
     </main>
 
-    <footer class="text-center py-8 text-sm text-slate-500 border-t mt-8">
-        <p>&copy; 2025 Karya Digital ID. Diberdayakan untuk talenta digital Indonesia.</p>
-    </footer>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             
@@ -195,6 +278,92 @@
             Chart.defaults.font.family = defaultFont.family;
             Chart.defaults.font.size = defaultFont.size;
             Chart.defaults.color = '#64748b';
+
+            const pilarLiterasiLabels = ['Kecakapan Digital', 'Budaya Digital', 'Etika Digital', 'Keamanan Digital'];
+            const pilarLiterasiColors = ['#3498db', '#e67e22', '#2ecc71', '#9b59b6'];
+
+            const individualChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    }
+                },
+                cutout: '60%'
+            };
+
+            const endahData = {
+                labels: pilarLiterasiLabels,
+                datasets: [{
+                    label: 'Kompetensi Endah',
+                    data: [10, 25, 25, 40],
+                    backgroundColor: pilarLiterasiColors,
+                    borderColor: '#f8fafc',
+                    borderWidth: 2,
+                    hoverOffset: 4
+                }]
+            };
+            new Chart(document.getElementById('endahChart').getContext('2d'), { type: 'doughnut', data: endahData, options: individualChartOptions });
+
+            const widData = {
+                labels: pilarLiterasiLabels,
+                datasets: [{
+                    label: 'Kompetensi Bu Wid',
+                    data: [40, 25, 25, 10],
+                    backgroundColor: pilarLiterasiColors,
+                    borderColor: '#f8fafc',
+                    borderWidth: 2,
+                    hoverOffset: 4
+                }]
+            };
+            new Chart(document.getElementById('widChart').getContext('2d'), { type: 'doughnut', data: widData, options: individualChartOptions });
+            
+            const fatihData = {
+                labels: pilarLiterasiLabels,
+                datasets: [{
+                    label: 'Kompetensi Fatih',
+                    data: [25, 25, 25, 25],
+                    backgroundColor: pilarLiterasiColors,
+                    borderColor: '#f8fafc',
+                    borderWidth: 2,
+                    hoverOffset: 4
+                }]
+            };
+            new Chart(document.getElementById('fatihChart').getContext('2d'), { type: 'doughnut', data: fatihData, options: individualChartOptions });
+
+            const ajiData = { datasets: [{ data: [35, 15, 20, 30], backgroundColor: pilarLiterasiColors, borderColor: '#f8fafc' }]};
+            new Chart(document.getElementById('ajiChart').getContext('2d'), { type: 'doughnut', data: { labels: pilarLiterasiLabels, ...ajiData }, options: individualChartOptions });
+            
+            const fadhilData = { datasets: [{ data: [25, 20, 20, 35], backgroundColor: pilarLiterasiColors, borderColor: '#f8fafc' }]};
+            new Chart(document.getElementById('fadhilChart').getContext('2d'), { type: 'doughnut', data: { labels: pilarLiterasiLabels, ...fadhilData }, options: individualChartOptions });
+            
+            const nurulData = { datasets: [{ data: [15, 35, 30, 20], backgroundColor: pilarLiterasiColors, borderColor: '#f8fafc' }]};
+            new Chart(document.getElementById('nurulChart').getContext('2d'), { type: 'doughnut', data: { labels: pilarLiterasiLabels, ...nurulData }, options: individualChartOptions });
+            
+            const naswaData = { datasets: [{ data: [30, 25, 20, 25], backgroundColor: pilarLiterasiColors, borderColor: '#f8fafc' }]};
+            new Chart(document.getElementById('naswaChart').getContext('2d'), { type: 'doughnut', data: { labels: pilarLiterasiLabels, ...naswaData }, options: individualChartOptions });
+            
+            const lauraData = { datasets: [{ data: [20, 20, 40, 20], backgroundColor: pilarLiterasiColors, borderColor: '#f8fafc' }]};
+            new Chart(document.getElementById('lauraChart').getContext('2d'), { type: 'doughnut', data: { labels: pilarLiterasiLabels, ...lauraData }, options: individualChartOptions });
+            
+            const cacaData = { datasets: [{ data: [20, 40, 25, 15], backgroundColor: pilarLiterasiColors, borderColor: '#f8fafc' }]};
+            new Chart(document.getElementById('cacaChart').getContext('2d'), { type: 'doughnut', data: { labels: pilarLiterasiLabels, ...cacaData }, options: individualChartOptions });
+            
+            const oktaData = { datasets: [{ data: [35, 15, 15, 35], backgroundColor: pilarLiterasiColors, borderColor: '#f8fafc' }]};
+            new Chart(document.getElementById('oktaChart').getContext('2d'), { type: 'doughnut', data: { labels: pilarLiterasiLabels, ...oktaData }, options: individualChartOptions });
+            
+            const didikData = { datasets: [{ data: [15, 30, 35, 20], backgroundColor: pilarLiterasiColors, borderColor: '#f8fafc' }]};
+            new Chart(document.getElementById('didikChart').getContext('2d'), { type: 'doughnut', data: { labels: pilarLiterasiLabels, ...didikData }, options: individualChartOptions });
+            
+            const ninaData = { datasets: [{ data: [40, 15, 15, 30], backgroundColor: pilarLiterasiColors, borderColor: '#f8fafc' }]};
+            new Chart(document.getElementById('ninaChart').getContext('2d'), { type: 'doughnut', data: { labels: pilarLiterasiLabels, ...ninaData }, options: individualChartOptions });
+
 
             const backgroundChartData = {
                 labels: ['Pelaku UMKM', 'Pelajar/Mahasiswa', 'Pencari Kerja', 'Profesional', 'Umum'],
@@ -329,7 +498,7 @@
                 labels: ['Terdaftar', 'Level Pemula', 'Level Terampil', 'Level Mahir', 'Berkarya'],
                 datasets: [{
                     label: 'Jumlah Peserta',
-                    data: [50281, 28150, 11260, 4500, 1800],
+                    data: [250, 140, 56, 22, 9],
                     backgroundColor: [
                         'rgba(189, 195, 199, 0.7)',
                         'rgba(52, 152, 219, 0.7)',
@@ -388,3 +557,4 @@
     </script>
 </body>
 </html>
+
