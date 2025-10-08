@@ -218,7 +218,21 @@
 
     </main>
 
+    <!-- Tombol Musik -->
+    <button id="music-toggle" class="fixed bottom-6 right-6 z-50 w-14 h-14 bg-purple-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-purple-700 transition transform hover:scale-110 focus:outline-none">
+        <i data-lucide="music-4"></i>
+    </button>
+
+    <!-- Musik Latar -->
+    <audio id="background-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
+        Browser Anda tidak mendukung elemen audio.
+    </audio>
+
     <script>
+        // Inisialisasi ikon
+        lucide.createIcons();
+
         // Logika untuk Filter Galeri Karya
         const filterContainer = document.getElementById('filter-container');
         const filterBtns = filterContainer.querySelectorAll('.filter-btn');
@@ -252,6 +266,21 @@
                 setTimeout(typeWriter, 50); // Kecepatan ketik
             }
         }
+        
+        // Logika untuk Tombol Musik
+        const musicToggle = document.getElementById('music-toggle');
+        const backgroundMusic = document.getElementById('background-music');
+
+        musicToggle.addEventListener('click', () => {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                musicToggle.innerHTML = '<i data-lucide="volume-x"></i>';
+            } else {
+                backgroundMusic.pause();
+                musicToggle.innerHTML = '<i data-lucide="music-4"></i>';
+            }
+            lucide.createIcons(); // Render ulang ikon setelah diubah
+        });
         
         document.addEventListener('DOMContentLoaded', (event) => {
             typeWriter();
